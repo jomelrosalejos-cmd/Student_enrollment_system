@@ -11,11 +11,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -26,21 +28,20 @@ public class LoginFrame implements ActionListener{
 	Image imageLogo;
 	Image iconImage;
 	
+	JFrame frame;
+	
 	JPasswordField passwordField;
 	JTextField textField;
 	
 	JButton signInbutton;
 	JButton linkButton;
 	
-	String usernameInput;
-	String userPasswordInput;
-	
 	public LoginFrame(){
 		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 				
-		JFrame frame = new JFrame("Login");
+		frame = new JFrame("Login");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
@@ -78,7 +79,6 @@ public class LoginFrame implements ActionListener{
 		textField.setColumns(10);
 		textField.setBounds(58, 217, 430, 30);
 		
-		usernameInput = textField.getText();
 		rightPanel.add(textField);
 		
 		JLabel passwordLabel = new JLabel("Password");
@@ -146,14 +146,34 @@ public class LoginFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == signInbutton) {
-			usernameInput = textField.getText();
+			String usernameInput = textField.getText();
 			char[] passwordInput = passwordField.getPassword();
-			userPasswordInput = new String(passwordInput);
+			String userPasswordInput = new String(passwordInput);
 			
-			LoginVerification verify = new LoginVerification(usernameInput, userPasswordInput);
+			DatabaseConnection verify = new DatabaseConnection();
+			boolean loginResult = verify.Verify(usernameInput, userPasswordInput);
+			
+			if(loginResult == true) {
+				if(verify.getStudentID() == 0) {
+					new EnrollmentForm(verify);
+				}
+				else {
+					StudentDashBoard studentDashboard = new StudentDashBoard(verify);
+					frame.dispose();
+				}
+				
+				frame.dispose();
+			}
+			else {
+				JOptionPane.showMessageDialog(frame, "LOGIN FAILED");
+			}
+			
+			
 		}
-		if(e.getSource() == linkButton) {
-			System.out.println("Register here");
+		
+		else if(e.getSource() == linkButton) {
+			new CreateAnAccount();
+			frame.dispose();
 		}
 		
 	}

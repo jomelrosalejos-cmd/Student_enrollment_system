@@ -21,16 +21,21 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 
-public class StudentDashBoard {
+public class StudentDashBoard implements ActionListener {
 	
 	Image imageLogo;
 	Image iconImage;
 	
-	public StudentDashBoard() {
+	JFrame frame;
+	JButton btnLogOut;
+	
+	public StudentDashBoard(DatabaseConnection database) {
+		database.studentInformation();
+		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
-		JFrame frame = new JFrame("Student Dashboard");
+		frame = new JFrame("Student Dashboard");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
@@ -49,7 +54,6 @@ public class StudentDashBoard {
 		leftPanel.setLayout(null);
 		
 		Image image = new ImageIcon(getClass().getResource("/images/logo_no_bg.png")).getImage();
-		
 		JPanel panel_logo = new JPanel() {
 			@Override
 		    public void paintComponent(Graphics g) {
@@ -80,12 +84,9 @@ public class StudentDashBoard {
 		dashBoTitle.setBounds(40, 20, 167, 28);
 		dashBoTitlePanel.add(dashBoTitle);
 		
-		JButton btnLogOut = new JButton("🚪  Log Out");
+		btnLogOut = new JButton("🚪  Log Out");
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnLogOut.addActionListener(this);
 		btnLogOut.setOpaque(false);
 		btnLogOut.setHorizontalAlignment(SwingConstants.LEADING);
 		btnLogOut.setForeground(new Color(255, 255, 255));
@@ -109,9 +110,9 @@ public class StudentDashBoard {
 		silhouette.setBounds(8, 11, 30, 40);
 		studentNamePanel.add(silhouette);
 		
-		JLabel studentName = new JLabel("Jomel Rosalejos");
+		JLabel studentName = new JLabel(database.getFirstName()+" "+database.getLastName());
 		studentName.setForeground(Color.WHITE);
-		studentName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		studentName.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		studentName.setBounds(42, 11, 119, 20);
 		studentNamePanel.add(studentName);
 		
@@ -243,12 +244,12 @@ public class StudentDashBoard {
 		mainPanel.add(enrollmentDetailsPanel);
 		enrollmentDetailsPanel.setLayout(null);
 		
-		JLabel lrnLabel = new JLabel("LRN: ");
+		JLabel lrnLabel = new JLabel("LRN: " + database.getLRN());
 		lrnLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lrnLabel.setBounds(10, 11, 255, 23);
 		enrollmentDetailsPanel.add(lrnLabel);
 		
-		JLabel strandLabel = new JLabel("Strand: ");
+		JLabel strandLabel = new JLabel("Strand: " + database.getStrand());
 		strandLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		strandLabel.setBounds(10, 45, 255, 23);
 		enrollmentDetailsPanel.add(strandLabel);
@@ -273,49 +274,19 @@ public class StudentDashBoard {
 		schoolYearLabel.setBounds(348, 45, 194, 23);
 		enrollmentDetailsPanel.add(schoolYearLabel);
 		
+		JLabel student_id_label = new JLabel("Student ID: " + database.getStudentID());
+		student_id_label.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		student_id_label.setBounds(348, 79, 227, 23);
+		enrollmentDetailsPanel.add(student_id_label);
+		
 		JLabel enrollmentDetailsLabel = new JLabel("Enrollment Details");
 		enrollmentDetailsLabel.setForeground(new Color(251, 181, 23));
 		enrollmentDetailsLabel.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		enrollmentDetailsLabel.setBounds(10, 166, 214, 27);
 		mainPanel.add(enrollmentDetailsLabel);
 		
-		JPanel progressPanel = new JPanel() {
-			 @Override
-			    protected void paintComponent(Graphics g) {
-			        super.paintComponent(g);
-			        Graphics2D g2d = (Graphics2D) g;
-			        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			        
-			        //1
-			        g2d.setColor(new Color(48, 46, 127));
-			        g2d.drawOval(10, 10, 30, 30);
-			        g2d.setColor(Color.BLACK);
-			        g2d.drawLine(40, 25, 135, 25);
-			        
-			        //2
-			        g2d.setColor(new Color(48, 46, 127));
-			        g2d.drawOval(135, 10, 30, 30);
-			        g2d.setColor(Color.BLACK);
-			        g2d.drawLine(165, 25, 263, 25);
-			        
-			        //3
-			        g2d.setColor(new Color(48, 46, 127));
-			        g2d.drawOval(263, 10, 30, 30);
-			        g2d.setColor(Color.BLACK);
-			        g2d.drawLine(293, 25, 382, 25);
-			        
-			        //4
-			        g2d.setColor(new Color(48, 46, 127));
-			        g2d.drawOval(382, 10, 30, 30);
-			        g2d.setColor(Color.BLACK);
-			        g2d.drawLine(412, 25, 495, 25);
-			        
-			        //5
-			        g2d.setColor(new Color(48, 46, 127));
-			        g2d.drawOval(495, 10, 30, 30);
-			        
-			    }
-		};
+		//progress step
+		ProgressPanel progressPanel = new ProgressPanel();
 		progressPanel.setBackground(new Color(245, 246, 251));
 		progressPanel.setBounds(61, 79, 541, 50);
 		mainPanel.add(progressPanel);
@@ -347,6 +318,15 @@ public class StudentDashBoard {
 		mainPanel.add(step5);
 			
 		frame.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnLogOut) {
+			frame.dispose();
+			new LoginFrame();
+		}
+		
 	}
 
 }
