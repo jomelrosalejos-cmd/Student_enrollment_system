@@ -113,15 +113,16 @@ public class RegistrarDashboard {
 		userIconLabel.setBounds(8, 11, 30, 40);
 		userInfoPanel.add(userIconLabel);
 		
-		JLabel registrarNameLabel = new JLabel("Bulbolito Bayagbag");
-		registrarNameLabel.setForeground(Color.WHITE);
-		registrarNameLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		registrarNameLabel.setBounds(42, 11, 156, 20);
-		userInfoPanel.add(registrarNameLabel);
+//		JLabel registrarNameLabel = new JLabel("name");
+//		registrarNameLabel.setForeground(Color.WHITE);
+//		registrarNameLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+//		registrarNameLabel.setBounds(42, 11, 156, 20);
+//		userInfoPanel.add(registrarNameLabel);
 		
 		JLabel registrarRoleLabel = new JLabel("Registrar");
 		registrarRoleLabel.setForeground(Color.WHITE);
-		registrarRoleLabel.setBounds(42, 32, 128, 14);
+		registrarRoleLabel.setBounds(50, 20, 128, 20);
+		registrarRoleLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		userInfoPanel.add(registrarRoleLabel);
 		
 		JPanel contentPanel = new JPanel();

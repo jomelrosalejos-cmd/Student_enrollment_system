@@ -55,10 +55,34 @@ public class EnrollmentForm implements ActionListener{
 	JButton IDpicButton;
 	JButton goodMoralButton;
 	
+	//form137 docs
 	File form137File;
 	String form137fileSource;
 	Path form137source;
 	Path form137destination;
+	
+	//birth certificate docs
+	File birthCertFile;
+	String birthCertfileSource;
+	Path birthCertsource;
+	Path birthCertdestination;
+	
+	//Good moral docs
+	File goodMoralFile;
+	String goodMoralfileSource;
+	Path goodMoralsource;
+	Path goodMoraldestination;
+	
+	//ID pic docs
+	File idPicFile;
+	String idPicfileSource;
+	Path idPicsource;
+	Path idPicdestination;
+	
+	JLabel form137FileNameDisplay;
+	JLabel birthCertFileNameDisplay;
+	JLabel IDpicFileNameDisplay;
+	JLabel goodMoralFileNameDisplay;
 	
 	JButton cancelButton;
 	JButton submitButton;
@@ -249,11 +273,12 @@ public class EnrollmentForm implements ActionListener{
 		form137.addActionListener(this);
 		form137.setBounds(22, 290, 95, 23);
 		mainForm.add(form137);
-		JLabel form137File = new JLabel("New label");
-		form137File.setBorder(new LineBorder(new Color(0, 0, 0)));
-		form137File.setHorizontalAlignment(SwingConstants.CENTER);
-		form137File.setBounds(117, 290, 101, 23);
-		mainForm.add(form137File);
+		form137FileNameDisplay = new JLabel("No file chosen");
+		form137FileNameDisplay.setBorder(new LineBorder(new Color(0, 0, 0)));
+		form137FileNameDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		form137FileNameDisplay.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		form137FileNameDisplay.setBounds(117, 290, 101, 23);
+		mainForm.add(form137FileNameDisplay);
 		
 		//Birth Certificate
 		JLabel birthCertLabel = new JLabel("Birth Certificate");
@@ -266,11 +291,12 @@ public class EnrollmentForm implements ActionListener{
 		birthCertButton.setBounds(23, 352, 95, 23);
 		birthCertButton.addActionListener(this);
 		mainForm.add(birthCertButton);
-		JLabel birthCertFile = new JLabel("New label");
-		birthCertFile.setHorizontalAlignment(SwingConstants.CENTER);
-		birthCertFile.setBorder(new LineBorder(new Color(0, 0, 0)));
-		birthCertFile.setBounds(117, 352, 101, 23);
-		mainForm.add(birthCertFile);
+		birthCertFileNameDisplay = new JLabel("No file chosen");
+		birthCertFileNameDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		birthCertFileNameDisplay.setBorder(new LineBorder(new Color(0, 0, 0)));
+		birthCertFileNameDisplay.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		birthCertFileNameDisplay.setBounds(117, 352, 101, 23);
+		mainForm.add(birthCertFileNameDisplay);
 		
 		//2x2 ID
 		JLabel IDpicLabel = new JLabel("2x2 ID picture");
@@ -283,11 +309,12 @@ public class EnrollmentForm implements ActionListener{
 		IDpicButton.setBounds(23, 419, 95, 23);
 		IDpicButton.addActionListener(this);
 		mainForm.add(IDpicButton);
-		JLabel IDpicFile = new JLabel("New label");
-		IDpicFile.setHorizontalAlignment(SwingConstants.CENTER);
-		IDpicFile.setBorder(new LineBorder(new Color(0, 0, 0)));
-		IDpicFile.setBounds(117, 419, 101, 23);
-		mainForm.add(IDpicFile);
+		IDpicFileNameDisplay = new JLabel("No file chosen");
+		IDpicFileNameDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		IDpicFileNameDisplay.setBorder(new LineBorder(new Color(0, 0, 0)));
+		IDpicFileNameDisplay.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		IDpicFileNameDisplay.setBounds(117, 419, 101, 23);
+		mainForm.add(IDpicFileNameDisplay);
 		
 		//Good Moral
 		JLabel goodMoralLabel = new JLabel("Good Moral");
@@ -300,11 +327,12 @@ public class EnrollmentForm implements ActionListener{
 		goodMoralButton.setBounds(269, 290, 95, 23);
 		goodMoralButton.addActionListener(this);
 		mainForm.add(goodMoralButton);
-		JLabel goodMoralFile = new JLabel("New label");
-		goodMoralFile.setHorizontalAlignment(SwingConstants.CENTER);
-		goodMoralFile.setBorder(new LineBorder(new Color(0, 0, 0)));
-		goodMoralFile.setBounds(363, 290, 101, 23);
-		mainForm.add(goodMoralFile);
+		goodMoralFileNameDisplay = new JLabel("No file chosen");
+		goodMoralFileNameDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		goodMoralFileNameDisplay.setBorder(new LineBorder(new Color(0, 0, 0)));
+		goodMoralFileNameDisplay.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		goodMoralFileNameDisplay.setBounds(363, 290, 101, 23);
+		mainForm.add(goodMoralFileNameDisplay);
 		
 		//Cancel button
 		cancelButton = new JButton("Cancel");
@@ -336,8 +364,13 @@ public class EnrollmentForm implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == submitButton) {
 			submitInformation();
-			uploadForm137();
 		}
+		
+		if(e.getSource() == cancelButton) {
+			frame.dispose();
+			new LoginFrame();
+		}
+		
 		if(e.getSource() == form137) {
 			JFileChooser fileChooser = new JFileChooser();
 			int result = fileChooser.showOpenDialog(null);
@@ -345,24 +378,45 @@ public class EnrollmentForm implements ActionListener{
 			if(result == JFileChooser.APPROVE_OPTION) {
 		        form137File = new File(fileChooser.getSelectedFile().getAbsolutePath());
 		        form137fileSource = String.valueOf(form137File);
+		        form137FileNameDisplay.setText(form137File.getName());
 			}
 			
 		}
 		if(e.getSource() == birthCertButton) {
+			JFileChooser fileChooser = new JFileChooser();
+			int result = fileChooser.showOpenDialog(null);
 			
+			if(result == JFileChooser.APPROVE_OPTION) {
+				birthCertFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+				birthCertfileSource = String.valueOf(birthCertFile);
+				birthCertFileNameDisplay.setText(birthCertFile.getName());
+			}
 		}
 		if(e.getSource() == IDpicButton) {
+			JFileChooser fileChooser = new JFileChooser();
+			int result = fileChooser.showOpenDialog(null);
 			
+			if(result == JFileChooser.APPROVE_OPTION) {
+				idPicFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+				idPicfileSource = String.valueOf(idPicFile);
+				IDpicFileNameDisplay.setText(idPicFile.getName());
+			}
 		}
 		if(e.getSource() == goodMoralButton) {
+			JFileChooser fileChooser = new JFileChooser();
+			int result = fileChooser.showOpenDialog(null);
 			
+			if(result == JFileChooser.APPROVE_OPTION) {
+				goodMoralFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+				goodMoralfileSource = String.valueOf(goodMoralFile);
+				goodMoralFileNameDisplay.setText(goodMoralFile.getName());
+			}
 		}
 }
 
 	
-	
-	private void uploadForm137() {
-        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\" + database.getStudentID();
+ 	private void uploadForm137() {
+        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Form 137 uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         form137source = Paths.get(form137fileSource);
@@ -371,12 +425,64 @@ public class EnrollmentForm implements ActionListener{
         try {
 			Files.copy(form137source, form137destination, StandardCopyOption.REPLACE_EXISTING);
 			System.out.println("Uploaded to: " + form137destination.toString());
+			
 		}
         catch (IOException exc) {
 			exc.printStackTrace();
 		}
 	}
-	
+
+ 	private void uploadBirthCert() {
+        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Birth Certificate uploads\\" + database.getStudentID();
+        new File(folderPath).mkdirs();
+        
+        birthCertsource = Paths.get(birthCertfileSource);
+        birthCertdestination = Paths.get(folderPath +"\\"+ birthCertFile.getName());
+        
+        try {
+			Files.copy(birthCertsource, birthCertdestination, StandardCopyOption.REPLACE_EXISTING);
+			System.out.println("Uploaded to: " + birthCertdestination.toString());
+			
+		}
+        catch (IOException exc) {
+			exc.printStackTrace();
+		}
+	}
+ 	
+ 	private void uploadIDpic() {
+        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\ID picture uploads\\" + database.getStudentID();
+        new File(folderPath).mkdirs();
+        
+        idPicsource = Paths.get(idPicfileSource);
+        idPicdestination = Paths.get(folderPath +"\\"+ idPicFile.getName());
+        
+        try {
+			Files.copy(idPicsource, idPicdestination, StandardCopyOption.REPLACE_EXISTING);
+			System.out.println("Uploaded to: " + idPicdestination.toString());
+			
+		}
+        catch (IOException exc) {
+			exc.printStackTrace();
+		}
+	}
+ 	
+ 	private void uploadGoodMoral() {
+        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Good Moral Uploads\\" + database.getStudentID();
+        new File(folderPath).mkdirs();
+        
+        goodMoralsource = Paths.get(goodMoralfileSource);
+        goodMoraldestination = Paths.get(folderPath +"\\"+ goodMoralFile.getName());
+        
+        try {
+			Files.copy(goodMoralsource, goodMoraldestination, StandardCopyOption.REPLACE_EXISTING);
+			System.out.println("Uploaded to: " + goodMoraldestination.toString());
+			
+		}
+        catch (IOException exc) {
+			exc.printStackTrace();
+		}
+	}
+ 	
 	private void submitInformation() {
 		int strandID = 0;
 		boolean hasError = false;
@@ -427,6 +533,16 @@ public class EnrollmentForm implements ActionListener{
 		if(hasError == false) {
 			database.insertInformation(strandID, lrnNumber, lastName, firstname, 
 					middlename, bDate, gender, adrs, phonenumber);
+			
+			uploadForm137();
+			uploadBirthCert();
+			uploadIDpic();
+			uploadGoodMoral();
+			database.insertEnrollment();
+			database.insertDocument("Form-137",form137destination);
+			database.insertDocument("Birth Certificate",birthCertdestination);
+			database.insertDocument("ID Picture",idPicdestination);
+			database.insertDocument("Good Moral",goodMoraldestination);
 			
 			new StudentDashBoard(database);
 			frame.dispose();
