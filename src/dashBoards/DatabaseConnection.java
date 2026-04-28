@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
@@ -22,6 +23,11 @@ public class DatabaseConnection {
 	private String LRN;
 	private String firstName;
 	private String lastName;
+	private String middleName;
+	private String birthdate;
+	private String gender;
+	private String address;
+	private String phoneNumber;
 	private int strandID;
 	private int enrollmentID;
 
@@ -181,10 +187,24 @@ public class DatabaseConnection {
 		
 	}
 	
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public String getGender() {
+		return gender;
+	}
 	public int getUserID() {
 		return userID;
 	}
-	
+	public String getBirthdate() {
+		return birthdate;
+	}
+	public String getMiddleName() {
+		return middleName;
+	}
 	public int getStudentID() {
 		String studentIDquery = "SELECT * FROM students WHERE user_id = ?;";
 		

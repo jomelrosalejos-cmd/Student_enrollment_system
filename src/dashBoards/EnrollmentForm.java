@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class EnrollmentForm implements ActionListener{
 	
@@ -373,6 +374,8 @@ public class EnrollmentForm implements ActionListener{
 		
 		if(e.getSource() == form137) {
 			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
+			fileChooser.setFileFilter(filter);
 			int result = fileChooser.showOpenDialog(null);
 			
 			if(result == JFileChooser.APPROVE_OPTION) {
@@ -384,6 +387,8 @@ public class EnrollmentForm implements ActionListener{
 		}
 		if(e.getSource() == birthCertButton) {
 			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
+			fileChooser.setFileFilter(filter);
 			int result = fileChooser.showOpenDialog(null);
 			
 			if(result == JFileChooser.APPROVE_OPTION) {
@@ -394,6 +399,8 @@ public class EnrollmentForm implements ActionListener{
 		}
 		if(e.getSource() == IDpicButton) {
 			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
+			fileChooser.setFileFilter(filter);
 			int result = fileChooser.showOpenDialog(null);
 			
 			if(result == JFileChooser.APPROVE_OPTION) {
@@ -404,6 +411,8 @@ public class EnrollmentForm implements ActionListener{
 		}
 		if(e.getSource() == goodMoralButton) {
 			JFileChooser fileChooser = new JFileChooser();
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "jpeg", "png");
+			fileChooser.setFileFilter(filter);
 			int result = fileChooser.showOpenDialog(null);
 			
 			if(result == JFileChooser.APPROVE_OPTION) {

@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,20 +22,41 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 
-public class RegistrarDashboard {
+public class RegistrarDashboard implements ActionListener{
+	
+	RegistrarDatabaseConnection database = new RegistrarDatabaseConnection();
 	
 	Image imageLogo;
 	Image iconImage;
 	
+	JButton filterPendingButton;
+	JButton filterEnrolledButton;
+	JButton filterRejectedButton;
+	
+	JButton searchStudentButton;
+	JButton moreInfo;
+
+	JTable studentTable;
+	
+	JFrame frame;
+	JButton btnLogOut;
+	
+	ArrayList<Object[]> row = database.getEnrollments();
+	Object[][] data = row.toArray(new Object[0][]);
+	String[] column = {"studentID", "Name", "LRN", "Gender", "Strand", "Status"};
+	
 	public RegistrarDashboard() {
+		
+		
 		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
-		JFrame frame = new JFrame("Registrar Dashboard");
+		frame = new JFrame("Registrar Dashboard");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
@@ -84,12 +106,9 @@ public class RegistrarDashboard {
 		dashboardTitleLabel.setBounds(31, 20, 167, 28);
 		dashboardTitlePanel.add(dashboardTitleLabel);
 		
-		JButton btnLogOut = new JButton("🚪  Log Out");
+		btnLogOut = new JButton("🚪  Log Out");
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnLogOut.addActionListener(this);
 		btnLogOut.setOpaque(false);
 		btnLogOut.setHorizontalAlignment(SwingConstants.LEADING);
 		btnLogOut.setForeground(new Color(255, 255, 255));
@@ -216,23 +235,92 @@ public class RegistrarDashboard {
 		searchLabel.setBounds(21, 177, 189, 14);
 		contentPanel.add(searchLabel);
 		
-		String[] column = {"studentID", "Name", "LRN", "Gender", "Strand", "Status"};
-		Object[][] data = {
-				{1, "Rosalejos, Jomel M.", "109486130009", "Male", "ICT", "Pending"},
-				{2, "Bustine, Jieber D.", "101010130009", "Male", "STEM", "Pending"}
-		};
-		
-		JTable studentTable = new JTable(data, column) {
+		studentTable = new JTable(data, column) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
-		};
+		};	
 		studentTable.getTableHeader().setBackground(new Color(48, 46, 127));
 		studentTable.getTableHeader().setForeground(Color.white);
-		
 		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		setTableColumnSize();
+		
+		JScrollPane studentTableScrollPane = new JScrollPane(studentTable);
+		studentTableScrollPane.setBounds(22, 233, 584, 255);
+		contentPanel.add(studentTableScrollPane);
+		
+		filterPendingButton = new JButton("Pending");
+		filterPendingButton.setFocusable(false);
+		filterPendingButton.addActionListener(this);
+		filterPendingButton.setBounds(417, 195, 89, 23);
+		filterPendingButton.setBounds(316, 195, 89, 23);
+		contentPanel.add(filterPendingButton);
+		
+		filterEnrolledButton = new JButton("Enrolled");
+		filterEnrolledButton.setFocusable(false);
+		filterEnrolledButton.addActionListener(this);
+		filterEnrolledButton.setBounds(417, 195, 89, 23);
+		contentPanel.add(filterEnrolledButton);
+		
+		filterRejectedButton = new JButton("Rejected");
+		filterRejectedButton.setFocusable(false);
+		filterRejectedButton.addActionListener(this);
+		filterRejectedButton.setBounds(517, 195, 89, 23);
+		contentPanel.add(filterRejectedButton);
+		
+		searchStudentButton = new JButton("Search");
+		searchStudentButton.setFocusable(false);
+		searchStudentButton.addActionListener(this);
+		searchStudentButton.setBounds(316, 499, 89, 23);
+		contentPanel.add(searchStudentButton);
+		
+		JButton updateStudentButton = new JButton("Update");
+		updateStudentButton.setFocusable(false);
+		updateStudentButton.addActionListener(this);
+		updateStudentButton.setBounds(417, 499, 89, 23);
+		contentPanel.add(updateStudentButton);
+		
+		JButton deleteStudentButton = new JButton("Delete");
+		deleteStudentButton.setFocusable(false);
+		deleteStudentButton.addActionListener(this);
+		deleteStudentButton.setBounds(517, 499, 89, 23);
+		contentPanel.add(deleteStudentButton);
+		
+		moreInfo = new JButton("More Info");
+		moreInfo.setFocusable(false);
+		moreInfo.addActionListener(this);
+		moreInfo.setBounds(22, 499, 89, 23);
+		contentPanel.add(moreInfo);
+		
+		frame.setVisible(true);
+	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == moreInfo) {
+			new ViewStudentInfo();
+		}
+		if(e.getSource() == filterPendingButton) {
+			row = database.getPendingEnrollments();
+			data = row.toArray(new Object[0][]);
+			studentTable.setModel(new DefaultTableModel(data, column));
+			setTableColumnSize();
+		}
+		if(e.getSource() == filterEnrolledButton) {
+			row = database.getEnrolledEnrollments();
+			data = row.toArray(new Object[0][]);
+			studentTable.setModel(new DefaultTableModel(data, column));
+			setTableColumnSize();
+		}
+		
+		if(e.getSource() == btnLogOut) {
+			System.exit(0);
+		}
+	}
+	
+	public void setTableColumnSize() {
 		TableColumnModel columnModel = studentTable.getColumnModel();
 		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
@@ -242,46 +330,7 @@ public class RegistrarDashboard {
 		columnModel.getColumn(3).setPreferredWidth(80);
 		columnModel.getColumn(4).setPreferredWidth(70);
 		columnModel.getColumn(5).setPreferredWidth(70);
-		
-		JScrollPane studentTableScrollPane = new JScrollPane(studentTable);
-		studentTableScrollPane.setBounds(22, 233, 584, 255);
-		contentPanel.add(studentTableScrollPane);
-		
-		JButton filterPendingButton = new JButton("Pending");
-		filterPendingButton.setFocusable(false);
-		filterPendingButton.setBounds(316, 195, 89, 23);
-		contentPanel.add(filterPendingButton);
-		
-		JButton filterEnrolledButton = new JButton("Enrolled");
-		filterEnrolledButton.setFocusable(false);
-		filterEnrolledButton.setBounds(417, 195, 89, 23);
-		contentPanel.add(filterEnrolledButton);
-		
-		JButton filterRejectedButton = new JButton("Rejected");
-		filterRejectedButton.setFocusable(false);
-		filterRejectedButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		filterRejectedButton.setBounds(517, 195, 89, 23);
-		contentPanel.add(filterRejectedButton);
-		
-		JButton viewStudentButton = new JButton("View");
-		viewStudentButton.setFocusable(false);
-		viewStudentButton.setBounds(316, 499, 89, 23);
-		contentPanel.add(viewStudentButton);
-		
-		JButton updateStudentButton = new JButton("Update");
-		updateStudentButton.setFocusable(false);
-		updateStudentButton.setBounds(417, 499, 89, 23);
-		contentPanel.add(updateStudentButton);
-		
-		JButton deleteStudentButton = new JButton("Delete");
-		deleteStudentButton.setFocusable(false);
-		deleteStudentButton.setBounds(517, 499, 89, 23);
-		contentPanel.add(deleteStudentButton);
-		
-		frame.setVisible(true);
 	}
+	
 }
 

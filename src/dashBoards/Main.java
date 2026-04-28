@@ -12,7 +12,7 @@ public class Main {
 		//new PrincipalDashboard();
 		new RegistrarDashboard();
 		//new SQLConnection();
-		
+		//new ViewStudentInfo();
 		
 	}
 }
