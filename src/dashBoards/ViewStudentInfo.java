@@ -2,17 +2,21 @@ package dashBoards;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
@@ -20,7 +24,30 @@ public class ViewStudentInfo implements ActionListener{
 	
 	JFrame frame;
 	
-	public ViewStudentInfo() {
+	JButton idPicBtn;
+	JButton goodmoralBtn;
+	JButton birthCertBtn;
+	JButton form137btn;
+	JButton exitButton;
+	
+	int student_id;
+	
+	RegistrarDatabaseConnection database = new RegistrarDatabaseConnection();
+	
+	public ViewStudentInfo(int student_id) {
+		this.student_id = student_id;
+		
+		Object []data = database.getStudentInformation(student_id);
+		
+		String studentIdData = String.valueOf(data[0]);
+		String fullnameData = String.valueOf(data[1]);
+		String lrnData = String.valueOf(data[2]);
+		String birthdateData = String.valueOf(data[3]);
+		String genderData = String.valueOf(data[4]);
+		String phoneNumberData = String.valueOf(data[5]);
+		String addressData = String.valueOf(data[6]);
+		String emailData = String.valueOf(data[7]);
+		String userIdData = String.valueOf(data[8]);
 		
 		Image iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
@@ -52,33 +79,41 @@ public class ViewStudentInfo implements ActionListener{
 		backPanel.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 		
-		JLabel studentID = new JLabel("StudentID: ");
+		JLabel studentID = new JLabel("StudentID: " + studentIdData);
 		studentID.setBounds(10, 28, 340, 14);
 		panel.add(studentID);
 		
-		JLabel fullName = new JLabel("Full Name: ");
+		JLabel fullName = new JLabel("Full Name: " + fullnameData);
 		fullName.setBounds(10, 44, 340, 14);
 		panel.add(fullName);
 		
-		JLabel LRN = new JLabel("LRN: ");
+		JLabel LRN = new JLabel("LRN: " + lrnData);
 		LRN.setBounds(10, 60, 340, 14);
 		panel.add(LRN);
 		
-		JLabel birthdate = new JLabel("Birthdate: ");
+		JLabel birthdate = new JLabel("Birthdate: " + birthdateData);
 		birthdate.setBounds(10, 76, 340, 14);
 		panel.add(birthdate);
 		
-		JLabel gender = new JLabel("Gender: ");
+		JLabel gender = new JLabel("Gender: " + genderData);
 		gender.setBounds(10, 92, 340, 14);
 		panel.add(gender);
 		
-		JLabel phoneNumber = new JLabel("Phone number: ");
+		JLabel phoneNumber = new JLabel("Phone number: " + phoneNumberData);
 		phoneNumber.setBounds(10, 109, 340, 14);
 		panel.add(phoneNumber);
 		
-		JLabel address = new JLabel("Address: ");
+		JLabel address = new JLabel("Address: " + addressData);
 		address.setBounds(10, 125, 340, 14);
 		panel.add(address);
+		
+		JLabel emailAddress = new JLabel("Email: " + emailData);
+		emailAddress.setBounds(10, 140, 340, 14);
+		panel.add(emailAddress);
+		
+		JLabel userID = new JLabel("User ID: " + userIdData);
+		userID.setBounds(10, 156, 340, 14);
+		panel.add(userID);
 		
 		JLabel strand = new JLabel("Strand: ");
 		strand.setBounds(10, 207, 340, 14);
@@ -88,14 +123,6 @@ public class ViewStudentInfo implements ActionListener{
 		section.setBounds(10, 191, 340, 14);
 		panel.add(section);
 		
-		JLabel emailAddress = new JLabel("Email: ");
-		emailAddress.setBounds(10, 140, 340, 14);
-		panel.add(emailAddress);
-		
-		JLabel userID = new JLabel("User ID: ");
-		userID.setBounds(10, 156, 340, 14);
-		panel.add(userID);
-		
 		JLabel adviser = new JLabel("Adviser: ");
 		adviser.setBounds(10, 221, 340, 14);
 		panel.add(adviser);
@@ -104,28 +131,28 @@ public class ViewStudentInfo implements ActionListener{
 		viewDocuLabel.setBounds(10, 253, 340, 14);
 		panel.add(viewDocuLabel);
 		
-		JButton form137btn = new JButton("Form 137");
+		form137btn = new JButton("Form 137");
 		form137btn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		form137btn.setFocusable(false);
 		form137btn.addActionListener(this);
 		form137btn.setBounds(10, 274, 89, 23);
 		panel.add(form137btn);
 		
-		JButton birthCertBtn = new JButton("Birth Cert");
+		birthCertBtn = new JButton("Birth Cert");
 		birthCertBtn.addActionListener(this);
 		birthCertBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		birthCertBtn.setFocusable(false);
 		birthCertBtn.setBounds(10, 305, 89, 23);
 		panel.add(birthCertBtn);
 		
-		JButton goodmoralBtn = new JButton("Good Moral");
+		goodmoralBtn = new JButton("Good Moral");
 		goodmoralBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		goodmoralBtn.setFocusable(false);
 		goodmoralBtn.addActionListener(this);
 		goodmoralBtn.setBounds(10, 335, 89, 23);
 		panel.add(goodmoralBtn);
 		
-		JButton idPicBtn = new JButton("ID picture");
+		idPicBtn = new JButton("ID picture");
 		idPicBtn.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		idPicBtn.setFocusable(false);
 		idPicBtn.addActionListener(this);
@@ -208,7 +235,7 @@ public class ViewStudentInfo implements ActionListener{
 		groupIDpic.add(approvedIDpic);
 		groupIDpic.add(rejectedIDpic);
 		
-		JButton exitButton = new JButton("EXIT");
+		exitButton = new JButton("EXIT");
 		exitButton.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		exitButton.setFocusable(false);
 		exitButton.setBounds(286, 366, 64, 23);
@@ -221,7 +248,61 @@ public class ViewStudentInfo implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource() == exitButton) {
+			frame.dispose();
+		}
+		if(e.getSource() == idPicBtn) {
+			String folderPath = database.getFilePath("ID Picture", database.getEnrollmentID(student_id));
+			folderPath = folderPath.replace("\\", "/");
+			File file = new File(folderPath);
+			
+			try {
+				if (file.exists()) {Desktop.getDesktop().open(file);}
+				else {JOptionPane.showMessageDialog(null, "File not found!");}
+			}
+			catch(Exception error) {
+				error.printStackTrace();
+			}
+		}
+		if(e.getSource() == form137btn) {
+			String folderPath = database.getFilePath("Form-137", database.getEnrollmentID(student_id));
+			folderPath = folderPath.replace("\\", "/");
+			File file = new File(folderPath);
+			
+			try {
+				if (file.exists()) {Desktop.getDesktop().open(file);}
+				else {JOptionPane.showMessageDialog(null, "File not found!");}
+			}
+			catch(Exception error) {
+				error.printStackTrace();
+			}
+		}
+		if(e.getSource() == birthCertBtn) {
+			String folderPath = database.getFilePath("Birth Certificate", database.getEnrollmentID(student_id));
+			folderPath = folderPath.replace("\\", "/");
+			File file = new File(folderPath);
+			
+			try {
+				if (file.exists()) {Desktop.getDesktop().open(file);}
+				else {JOptionPane.showMessageDialog(null, "File not found!");}
+			}
+			catch(Exception error) {
+				error.printStackTrace();
+			}
+		}
+		if(e.getSource() == goodmoralBtn) {
+			String folderPath = database.getFilePath("Good Moral", database.getEnrollmentID(student_id));
+			folderPath = folderPath.replace("\\", "/");
+			File file = new File(folderPath);
+			
+			try {
+				if (file.exists()) {Desktop.getDesktop().open(file);}
+				else {JOptionPane.showMessageDialog(null, "File not found!");}
+			}
+			catch(Exception error) {
+				error.printStackTrace();
+			}
+		}
 		
 	}
 	

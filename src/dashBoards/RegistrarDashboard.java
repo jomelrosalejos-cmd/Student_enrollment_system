@@ -33,6 +33,8 @@ public class RegistrarDashboard implements ActionListener{
 	Image imageLogo;
 	Image iconImage;
 	
+	JTextField studentSearchField;
+	
 	JButton filterPendingButton;
 	JButton filterEnrolledButton;
 	JButton filterRejectedButton;
@@ -44,6 +46,8 @@ public class RegistrarDashboard implements ActionListener{
 	
 	JFrame frame;
 	JButton btnLogOut;
+	
+	JButton refreshButton;
 	
 	ArrayList<Object[]> row = database.getEnrollments();
 	Object[][] data = row.toArray(new Object[0][]);
@@ -174,7 +178,7 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.add(pendingCard);
 		pendingCard.setLayout(null);
 		
-		int pending = 25;
+		int pending = database.getTotalPending("PENDING");
 		String strPending = String.valueOf(pending);
 		
 		JLabel pendingValueLabel = new JLabel(strPending);
@@ -197,7 +201,7 @@ public class RegistrarDashboard implements ActionListener{
 		enrolledTitleLabel.setBounds(10, 29, 92, 14);
 		enrolledCard.add(enrolledTitleLabel);
 		
-		int enrolled = 100;
+		int enrolled = database.getTotalPending("ENROLLED");
 		String strEnrolled = String.valueOf(enrolled);
 		
 		JLabel enrolledValueLabel = new JLabel(strEnrolled);
@@ -212,7 +216,7 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.add(rejectedCard);
 		rejectedCard.setLayout(null);
 		
-		int rejected = 10;
+		int rejected = database.getTotalPending("REJECTED");
 		String strRejected = String.valueOf(rejected);
 		
 		JLabel rejectedValueLabel = new JLabel(strRejected);
@@ -225,15 +229,15 @@ public class RegistrarDashboard implements ActionListener{
 		rejectedTitleLabel.setBounds(10, 29, 92, 14);
 		rejectedCard.add(rejectedTitleLabel);
 		
-		JTextField studentSearchField = new JTextField();
+		JLabel searchLabel = new JLabel("🔍 Search student:");
+		searchLabel.setBounds(21, 177, 189, 14);
+		contentPanel.add(searchLabel);
+		
+		studentSearchField = new JTextField();
 		studentSearchField.setBorder(new LineBorder(new Color(171, 173, 179)));
 		studentSearchField.setBounds(22, 196, 188, 20);
 		contentPanel.add(studentSearchField);
 		studentSearchField.setColumns(10);
-		
-		JLabel searchLabel = new JLabel("🔍 Search student:");
-		searchLabel.setBounds(21, 177, 189, 14);
-		contentPanel.add(searchLabel);
 		
 		studentTable = new JTable(data, column) {
 			@Override
@@ -282,11 +286,11 @@ public class RegistrarDashboard implements ActionListener{
 		updateStudentButton.setBounds(417, 499, 89, 23);
 		contentPanel.add(updateStudentButton);
 		
-		JButton deleteStudentButton = new JButton("Delete");
-		deleteStudentButton.setFocusable(false);
-		deleteStudentButton.addActionListener(this);
-		deleteStudentButton.setBounds(517, 499, 89, 23);
-		contentPanel.add(deleteStudentButton);
+		refreshButton = new JButton("Refresh");
+		refreshButton.setFocusable(false);
+		refreshButton.addActionListener(this);
+		refreshButton.setBounds(517, 499, 89, 23);
+		contentPanel.add(refreshButton);
 		
 		moreInfo = new JButton("More Info");
 		moreInfo.setFocusable(false);
@@ -299,8 +303,26 @@ public class RegistrarDashboard implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == searchStudentButton) {
+			try {
+				int value = Integer.parseInt(studentSearchField.getText().trim());
+				row = database.searchStudent(value);
+				data = row.toArray(new Object[0][]);
+				studentTable.setModel(new DefaultTableModel(data, column));
+				setTableColumnSize();
+			}
+			catch(NumberFormatException n) {
+				System.out.println("INVALID STUDENT ID!");
+			}
+		}
 		if(e.getSource() == moreInfo) {
-			new ViewStudentInfo();
+			try {
+				int value = Integer.parseInt(studentSearchField.getText().trim());
+				new ViewStudentInfo(value);
+			}
+			catch(NumberFormatException n) {
+				System.out.println("INVALID STUDENT ID!");
+			}
 		}
 		if(e.getSource() == filterPendingButton) {
 			row = database.getPendingEnrollments();
@@ -310,6 +332,19 @@ public class RegistrarDashboard implements ActionListener{
 		}
 		if(e.getSource() == filterEnrolledButton) {
 			row = database.getEnrolledEnrollments();
+			data = row.toArray(new Object[0][]);
+			studentTable.setModel(new DefaultTableModel(data, column));
+			setTableColumnSize();
+		}
+		if(e.getSource() == filterRejectedButton) {
+			row = database.getRejectedEnrollments();
+			data = row.toArray(new Object[0][]);
+			studentTable.setModel(new DefaultTableModel(data, column));
+			setTableColumnSize();
+		}
+		
+		if(e.getSource() == refreshButton) {
+			row = database.getEnrollments();
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
 			setTableColumnSize();
