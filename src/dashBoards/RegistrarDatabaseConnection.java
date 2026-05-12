@@ -159,11 +159,11 @@ public class RegistrarDatabaseConnection {
 	
 	public Object[] getStudentInformation(int student_id) {
 		String query = "SELECT student_id, last_name, first_name, middle_name,"
-				+ "LRN, birthdate, gender, phone_number, address, email, user_accounts.user_id "
+				+ "LRN, birthdate, gender, phone_number, address, email, user_accounts.user_id, user_name, password "
 				+ "FROM students INNER JOIN user_accounts "
 				+ "ON students.user_id = user_accounts.user_id "
 				+ "WHERE students.student_id = ?;";
-		Object[] studentData = new Object[9];
+		Object[] studentData = new Object[14];
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
@@ -172,7 +172,7 @@ public class RegistrarDatabaseConnection {
 
 			if(resultSet.next()) {
 				studentData[0] = resultSet.getInt("student_id");
-				studentData[1] = resultSet.getString("last_name") + ", " + resultSet.getString("first_name") + " "+ resultSet.getString("middle_name");
+				studentData[1] = resultSet.getString("last_name");
 				studentData[2] = resultSet.getString("LRN");
 				studentData[3] = resultSet.getString("birthdate");
 				studentData[4] = resultSet.getString("gender");
@@ -180,6 +180,10 @@ public class RegistrarDatabaseConnection {
 				studentData[6] = resultSet.getString("address");
 				studentData[7] = resultSet.getString("email");
 				studentData[8] = resultSet.getString("user_id");
+				studentData[9] = resultSet.getString("user_name");
+				studentData[10] = resultSet.getString("password");
+				studentData[11] = resultSet.getString("first_name");
+				studentData[12] = resultSet.getString("middle_name");
 			}
 		}
 		catch (SQLException e) {
@@ -276,6 +280,113 @@ public class RegistrarDatabaseConnection {
 		}
 		
 		return total;
+	}
+	
+	public Object[] getClassInfo(int sectionID) {
+		String query = "SELECT strand_id, section_name, last_name, first_name, middle_name "
+				+ "FROM teachers INNER JOIN sections ON teachers.teacher_id = sections.teacher_id WHERE sections.section_id = ? ;";
+		Object[] studentData = new Object[3];
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, sectionID);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+				studentData[0] = resultSet.getString("section_name");
+				studentData[1] = getStrand(resultSet.getInt("strand_id"));
+				studentData[2] = resultSet.getString("last_name") + ", " + resultSet.getString("first_name") + " "+ resultSet.getString("middle_name");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return studentData;
+	}
+	
+	public int getSectionID(int enrollmentID) {
+		String query = "SELECT section_id FROM enrollments WHERE enrollment_id = ?;";
+		int secionID = 0;
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+				secionID = resultSet.getInt("section_id");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return secionID;
+	}
+	
+	public void setDocumentStatusToApproved(String documentType, int enrollmentID) {
+		String query = "UPDATE student_requirements SET status = 'APPROVED'"
+				+ "WHERE enrollment_id = ? AND document_type = ?;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			statement.setString(2, documentType);
+			
+			int resultSet = statement.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void setDocumentStatusToRejected(String documentType, int enrollmentID) {
+		String query = "UPDATE student_requirements SET status = 'REJECTED'"
+				+ "WHERE enrollment_id = ? AND document_type = ?;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			statement.setString(2, documentType);
+			
+			int resultSet = statement.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateStudentInfo(String firstName, String middleName, String lastName, 
+			String lrn, String birthdate, String gender, String phoneNumber, String address, String email, 
+			String username, String password, int studentID) {
+		String query = "UPDATE students, user_accounts SET "
+				+ "students.first_name = ?, students.middle_name = ?, "
+				+ "students.last_name =?, students.LRN =?, students.birthdate = ?, "
+				+ "students.gender = ?, students.phone_number = ?, "
+				+ "students.address = ?, user_accounts.email = ?, "
+				+ "user_accounts.user_name = ?, user_accounts.password = ? "
+				+ "WHERE students.student_id = ? AND students.user_id = user_accounts.user_id;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, firstName);
+			statement.setString(2, middleName);
+			statement.setString(3, lastName);
+			statement.setString(4, lrn);
+			statement.setString(5, birthdate);
+			statement.setString(6, gender);
+			statement.setString(7, phoneNumber);
+			statement.setString(8, address);
+			statement.setString(9, email);
+			statement.setString(10, username);
+			statement.setString(11, password);
+			statement.setInt(12, studentID);
+			
+			int resultSet = statement.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

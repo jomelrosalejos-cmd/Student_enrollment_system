@@ -1,0 +1,296 @@
+package dashBoards;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class EditStudentInfo implements ActionListener{
+	
+	JFrame frame;
+	
+	private JTextField passwordTextfield;
+	private JTextField firstNameTextField;
+	private JTextField middleNameTextField;
+	private JTextField lastNameTextField;
+	private JTextField lrnTextField;
+	private JTextField birthdateTextfield;
+	private JComboBox comboBox;
+	private JTextField phoneNumberTextfield;
+	private JTextField addressTextfield;
+	private JTextField emailTextfield;
+	private JTextField usernameTextfield;
+	
+	int studentID;
+	int enrollmentID;
+	
+	JButton saveButton;
+	
+	RegistrarDatabaseConnection database = new RegistrarDatabaseConnection();
+	
+	public EditStudentInfo(int student_id){
+		
+		this.studentID = student_id;
+		this.enrollmentID = database.getEnrollmentID(student_id);
+		
+		int sectionID = database.getSectionID(enrollmentID);
+		
+		Object []classRoomData = database.getClassInfo(sectionID);
+		Object []data = database.getStudentInformation(student_id);
+		
+		String lastNameData = String.valueOf(data[1]);
+		String lrnData = String.valueOf(data[2]);
+		String birthdateData = String.valueOf(data[3]);
+		String genderData = String.valueOf(data[4]);
+		String phoneNumberData = String.valueOf(data[5]);
+		String addressData = String.valueOf(data[6]);
+		String emailData = String.valueOf(data[7]);
+		String accountUsername = String.valueOf(data[9]);
+		String accountPassword = String.valueOf(data[10]);;
+		String firstNameData = String.valueOf(data[11]);
+		String middleNameData = String.valueOf(data[12]);
+		
+		
+		Image iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
+		
+		frame = new JFrame("Edit");
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setLayout(new BorderLayout(0, 0));
+		frame.setIconImage(iconImage);
+		frame.setBounds(100, 100, 384, 441);
+		frame.setResizable(false);
+		
+		JPanel backPanel = new JPanel();
+		backPanel.setBackground(new Color(240, 240, 240));
+		frame.add(backPanel, BorderLayout.CENTER);
+		backPanel.setLayout(new BorderLayout(0, 0));
+		
+		JPanel headerPanel = new JPanel();
+		headerPanel.setBackground(new Color(48, 46, 127));
+		headerPanel.setPreferredSize(new Dimension(10, 30));
+		backPanel.add(headerPanel, BorderLayout.NORTH);
+		headerPanel.setLayout(null);
+		
+		JLabel editStudentInfoHeader = new JLabel("Edit Student Information");
+		editStudentInfoHeader.setForeground(new Color(251, 181, 23));
+		editStudentInfoHeader.setBounds(10, 9, 340, 14);
+		headerPanel.add(editStudentInfoHeader);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(255, 255, 255));
+		backPanel.add(panel, BorderLayout.CENTER);
+		panel.setLayout(null);
+		
+		JLabel firstName = new JLabel("First Name: ");
+		firstName.setBounds(10, 17, 72, 14);
+		panel.add(firstName);
+		
+		JLabel LRN = new JLabel("LRN: ");
+		LRN.setBounds(10, 101, 72, 14);
+		panel.add(LRN);
+		
+		JLabel birthdate = new JLabel("Birthdate: ");
+		birthdate.setBounds(10, 130, 72, 14);
+		panel.add(birthdate);
+		
+		JLabel gender = new JLabel("Gender: ");
+		gender.setBounds(10, 158, 72, 14);
+		panel.add(gender);
+		
+		JLabel phoneNumber = new JLabel("Phone number: ");
+		phoneNumber.setBounds(10, 186, 102, 14);
+		panel.add(phoneNumber);
+		
+		JLabel address = new JLabel("Address: ");
+		address.setBounds(10, 214, 72, 14);
+		panel.add(address);
+		
+		JLabel emailAddress = new JLabel("Email: ");
+		emailAddress.setBounds(10, 242, 72, 14);
+		panel.add(emailAddress);
+		
+		JLabel username = new JLabel("Username: ");
+		username.setBounds(10, 269, 79, 14);
+		panel.add(username);
+		
+		JLabel password = new JLabel("Password: ");
+		password.setBounds(10, 296, 72, 14);
+		panel.add(password);
+		
+		saveButton = new JButton("SAVE");
+		saveButton.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		saveButton.addActionListener(this);
+		saveButton.setFocusable(false);
+		saveButton.setBounds(270, 330, 64, 23);
+		panel.add(saveButton);
+		
+		passwordTextfield = new JTextField();
+		passwordTextfield.setBounds(92, 292, 242, 20);
+		passwordTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		passwordTextfield.setText(accountPassword);
+		panel.add(passwordTextfield);
+		
+		firstNameTextField = new JTextField();
+		firstNameTextField.setColumns(10);
+		firstNameTextField.setBounds(92, 13, 242, 20);
+		firstNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		firstNameTextField.setText(firstNameData);
+		panel.add(firstNameTextField);
+		
+		middleNameTextField = new JTextField();
+		middleNameTextField.setText(middleNameData);
+		middleNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		middleNameTextField.setColumns(10);
+		middleNameTextField.setBounds(92, 40, 242, 20);
+		panel.add(middleNameTextField);
+		
+		lastNameTextField = new JTextField();
+		lastNameTextField.setText(lastNameData);
+		lastNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lastNameTextField.setColumns(10);
+		lastNameTextField.setBounds(92, 68, 242, 20);
+		panel.add(lastNameTextField);
+		
+		lrnTextField = new JTextField();
+		lrnTextField.setColumns(10);
+		lrnTextField.setBounds(92, 97, 242, 20);
+		lrnTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lrnTextField.setText(lrnData);
+		panel.add(lrnTextField);
+		
+		birthdateTextfield = new JTextField();
+		birthdateTextfield.setColumns(10);
+		birthdateTextfield.setBounds(92, 126, 242, 20);
+		birthdateTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		birthdateTextfield.setText(birthdateData);
+		panel.add(birthdateTextfield);
+		
+		String[] Gender = {"Male", "Female"};
+		comboBox = new JComboBox(Gender);
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		comboBox.setBounds(92, 154, 101, 20);
+		comboBox.setSelectedItem(genderData);
+		panel.add(comboBox);
+		
+		phoneNumberTextfield = new JTextField();
+		phoneNumberTextfield.setColumns(10);
+		phoneNumberTextfield.setBounds(112, 182, 222, 20);
+		phoneNumberTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		phoneNumberTextfield.setText(phoneNumberData);
+		panel.add(phoneNumberTextfield);
+		
+		addressTextfield = new JTextField();
+		addressTextfield.setColumns(10);
+		addressTextfield.setBounds(92, 210, 242, 20);
+		addressTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		addressTextfield.setText(addressData);
+		panel.add(addressTextfield);
+		
+		emailTextfield = new JTextField();
+		emailTextfield.setColumns(10);
+		emailTextfield.setBounds(92, 238, 242, 20);
+		emailTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		emailTextfield.setText(emailData);
+		panel.add(emailTextfield);
+		
+		usernameTextfield = new JTextField();
+		usernameTextfield.setColumns(10);
+		usernameTextfield.setBounds(92, 265, 242, 20);
+		usernameTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		usernameTextfield.setText(accountUsername);
+		panel.add(usernameTextfield);
+		
+		JLabel middleName = new JLabel("Middle Name: ");
+		middleName.setBounds(10, 44, 81, 14);
+		panel.add(middleName);
+		
+		JLabel lastName = new JLabel("Last Name: ");
+		lastName.setBounds(10, 72, 79, 14);
+		panel.add(lastName);
+		
+		frame.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == saveButton) {
+			boolean hasError = false;
+			
+			LocalDate birthdate = null;
+			String lastName = lastNameTextField.getText().trim();
+			String firstName = firstNameTextField.getText().trim();
+			String middleName = middleNameTextField.getText().trim();
+			String phoneNumber = phoneNumberTextfield.getText().trim();
+			String gender = (String) comboBox.getSelectedItem();
+			String username = usernameTextfield.getText().trim();
+			String password = passwordTextfield.getText().trim();
+			String email = emailTextfield.getText().trim();
+			String lrn = lrnTextField.getText().trim();
+			String address = addressTextfield.getText().trim();
+			
+			if (lastName.length() > 50) {
+		        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.");
+		        hasError = true;}
+			else if (firstName.length() > 50) {
+		        JOptionPane.showMessageDialog(frame, "First name is too long. Max 50 characters.");
+		        hasError = true;}
+			else if (middleName.length() > 11) {
+		        JOptionPane.showMessageDialog(frame, "Middle name is too long. Max 50 characters.");
+		        hasError = true;}
+			else if (phoneNumber.length() > 50) {
+		        JOptionPane.showMessageDialog(frame, "Phone Number is too long. Max 11 Digits.");
+		        hasError = true;}
+			else if (username.length() > 255) {
+		        JOptionPane.showMessageDialog(frame, "Username is too long. Max 50 characters.");
+		        hasError = true;}
+			else if (password.length() > 255) {
+		        JOptionPane.showMessageDialog(frame, "Password is too long. Max 255 characters.");
+		        hasError = true;}
+			else if (email.length() > 255) {
+		        JOptionPane.showMessageDialog(frame, "Email is too long. Max 40 characters.");
+		        hasError = true;}
+			else if (lrn.length() > 12) {
+		        JOptionPane.showMessageDialog(frame, "LRN is too long. Max 12 characters.");
+		        hasError = true;}
+			
+			if(hasError == false) {
+				try {
+					birthdate = LocalDate.parse(birthdateTextfield.getText().trim());
+				}
+				catch(Exception error) {
+					JOptionPane.showMessageDialog(frame, "Wrong date format. Use YYYY-MM-DD");
+					hasError = true;
+				}
+			}
+			
+			if(hasError == false) {
+				int response = JOptionPane.showConfirmDialog(frame, "Save changes?", "Confirm", JOptionPane.YES_NO_OPTION);
+					
+				if(response == JOptionPane.YES_OPTION) {
+					database.updateStudentInfo(firstName,  middleName,  lastName, 
+							 lrn, String.valueOf(birthdate),  gender,  phoneNumber,  address,  email, 
+							 username,  password, studentID);
+					JOptionPane.showMessageDialog(frame, "Changes have been saved");
+					frame.dispose();
+				}
+			}
+		}
+		
+	}
+	
+}

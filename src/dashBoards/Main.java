@@ -13,6 +13,7 @@ public class Main {
 		new RegistrarDashboard();
 		//new SQLConnection();
 		//new ViewStudentInfo();
+		//new EditStudentInfo();
 		
 	}
 }

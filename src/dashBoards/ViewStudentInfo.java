@@ -30,17 +30,22 @@ public class ViewStudentInfo implements ActionListener{
 	JButton form137btn;
 	JButton exitButton;
 	
-	int student_id;
+	int studentID;
+	int enrollmentID;
 	
 	RegistrarDatabaseConnection database = new RegistrarDatabaseConnection();
 	
 	public ViewStudentInfo(int student_id) {
-		this.student_id = student_id;
+		this.studentID = student_id;
+		this.enrollmentID = database.getEnrollmentID(student_id);
 		
+		int sectionID = database.getSectionID(enrollmentID);
+		
+		Object []classRoomData = database.getClassInfo(sectionID);
 		Object []data = database.getStudentInformation(student_id);
 		
 		String studentIdData = String.valueOf(data[0]);
-		String fullnameData = String.valueOf(data[1]);
+		String lastNameData = String.valueOf(data[1]);
 		String lrnData = String.valueOf(data[2]);
 		String birthdateData = String.valueOf(data[3]);
 		String genderData = String.valueOf(data[4]);
@@ -48,6 +53,12 @@ public class ViewStudentInfo implements ActionListener{
 		String addressData = String.valueOf(data[6]);
 		String emailData = String.valueOf(data[7]);
 		String userIdData = String.valueOf(data[8]);
+		String firstNameData = String.valueOf(data[12]);
+		String middleNameData = String.valueOf(data[13]);
+		
+		String sectionName = String.valueOf(classRoomData[0]);
+		String strandName = String.valueOf(classRoomData[1]);
+		String teacherName = String.valueOf(classRoomData[2]);
 		
 		Image iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
@@ -83,7 +94,7 @@ public class ViewStudentInfo implements ActionListener{
 		studentID.setBounds(10, 28, 340, 14);
 		panel.add(studentID);
 		
-		JLabel fullName = new JLabel("Full Name: " + fullnameData);
+		JLabel fullName = new JLabel("Full Name: " + lastNameData + ", " + firstNameData + " " + middleNameData);
 		fullName.setBounds(10, 44, 340, 14);
 		panel.add(fullName);
 		
@@ -115,15 +126,15 @@ public class ViewStudentInfo implements ActionListener{
 		userID.setBounds(10, 156, 340, 14);
 		panel.add(userID);
 		
-		JLabel strand = new JLabel("Strand: ");
+		JLabel strand = new JLabel("Strand: " + strandName);
 		strand.setBounds(10, 207, 340, 14);
 		panel.add(strand);
 		
-		JLabel section = new JLabel("Section: ");
+		JLabel section = new JLabel("Section: " + sectionName);
 		section.setBounds(10, 191, 340, 14);
 		panel.add(section);
 		
-		JLabel adviser = new JLabel("Adviser: ");
+		JLabel adviser = new JLabel("Adviser: " + teacherName);
 		adviser.setBounds(10, 221, 340, 14);
 		panel.add(adviser);
 		
@@ -164,14 +175,19 @@ public class ViewStudentInfo implements ActionListener{
 		approvedForm137.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		approvedForm137.setBackground(new Color(255, 255, 255));
 		approvedForm137.setBounds(108, 274, 89, 23);
-		approvedForm137.addActionListener(this);
+		approvedForm137.addActionListener(e -> {
+		    database.setDocumentStatusToApproved("Form-137", enrollmentID);
+		});
 		panel.add(approvedForm137);
+		
 		JRadioButton rejectedForm137 = new JRadioButton("Rejected");
 		rejectedForm137.setFocusable(false);
 		rejectedForm137.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		rejectedForm137.setBackground(Color.WHITE);
 		rejectedForm137.setBounds(199, 274, 89, 23);
-		rejectedForm137.addActionListener(this);
+		rejectedForm137.addActionListener(e -> {
+		    database.setDocumentStatusToRejected("Form-137", enrollmentID);
+		});
 		panel.add(rejectedForm137);
 		
 		ButtonGroup groupForm137 = new ButtonGroup();
@@ -183,14 +199,19 @@ public class ViewStudentInfo implements ActionListener{
 		approvedBirthCert.setFocusable(false);
 		approvedBirthCert.setBackground(Color.WHITE);
 		approvedBirthCert.setBounds(108, 305, 89, 23);
-		approvedBirthCert.addActionListener(this);
+		approvedBirthCert.addActionListener(e -> {
+		    database.setDocumentStatusToApproved("Birth Certificate", enrollmentID);
+		});
 		panel.add(approvedBirthCert);
+		
 		JRadioButton rejectedBirthCert = new JRadioButton("Rejected");
 		rejectedBirthCert.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		rejectedBirthCert.setFocusable(false);
 		rejectedBirthCert.setBackground(Color.WHITE);
 		rejectedBirthCert.setBounds(199, 305, 89, 23);
-		rejectedBirthCert.addActionListener(this);
+		rejectedBirthCert.addActionListener(e -> {
+		    database.setDocumentStatusToRejected("Birth Certificate", enrollmentID);
+		});
 		panel.add(rejectedBirthCert);
 		
 		ButtonGroup groupBirthCert = new ButtonGroup();
@@ -202,14 +223,19 @@ public class ViewStudentInfo implements ActionListener{
 		approvedGoodMoral.setFocusable(false);
 		approvedGoodMoral.setBackground(Color.WHITE);
 		approvedGoodMoral.setBounds(108, 335, 89, 23);
-		approvedGoodMoral.addActionListener(this);
+		approvedGoodMoral.addActionListener(e -> {
+		    database.setDocumentStatusToApproved("Good Moral", enrollmentID);
+		});
 		panel.add(approvedGoodMoral);
+		
 		JRadioButton rejectedGoodMoral = new JRadioButton("Rejected");
 		rejectedGoodMoral.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		rejectedGoodMoral.setFocusable(false);
 		rejectedGoodMoral.setBackground(Color.WHITE);
 		rejectedGoodMoral.setBounds(199, 335, 89, 23);
-		rejectedGoodMoral.addActionListener(this);
+		rejectedGoodMoral.addActionListener(e -> {
+		    database.setDocumentStatusToRejected("Good Moral", enrollmentID);
+		});
 		panel.add(rejectedGoodMoral);
 		
 		ButtonGroup groupGoodMoral = new ButtonGroup();
@@ -221,14 +247,19 @@ public class ViewStudentInfo implements ActionListener{
 		approvedIDpic.setFocusable(false);
 		approvedIDpic.setBackground(Color.WHITE);
 		approvedIDpic.setBounds(108, 366, 89, 23);
-		approvedIDpic.addActionListener(this);
+		approvedIDpic.addActionListener(e -> {
+		    database.setDocumentStatusToApproved("ID Picture", enrollmentID);
+		});
 		panel.add(approvedIDpic);	
+		
 		JRadioButton rejectedIDpic = new JRadioButton("Rejected");
 		rejectedIDpic.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		rejectedIDpic.setFocusable(false);
 		rejectedIDpic.setBackground(Color.WHITE);
 		rejectedIDpic.setBounds(199, 366, 81, 23);
-		rejectedIDpic.addActionListener(this);
+		rejectedIDpic.addActionListener(e -> {
+		    database.setDocumentStatusToRejected("ID Picture", enrollmentID);
+		});
 		panel.add(rejectedIDpic);
 		
 		ButtonGroup groupIDpic = new ButtonGroup();
@@ -252,7 +283,7 @@ public class ViewStudentInfo implements ActionListener{
 			frame.dispose();
 		}
 		if(e.getSource() == idPicBtn) {
-			String folderPath = database.getFilePath("ID Picture", database.getEnrollmentID(student_id));
+			String folderPath = database.getFilePath("ID Picture", database.getEnrollmentID(studentID));
 			folderPath = folderPath.replace("\\", "/");
 			File file = new File(folderPath);
 			
@@ -265,7 +296,7 @@ public class ViewStudentInfo implements ActionListener{
 			}
 		}
 		if(e.getSource() == form137btn) {
-			String folderPath = database.getFilePath("Form-137", database.getEnrollmentID(student_id));
+			String folderPath = database.getFilePath("Form-137", database.getEnrollmentID(studentID));
 			folderPath = folderPath.replace("\\", "/");
 			File file = new File(folderPath);
 			
@@ -278,7 +309,7 @@ public class ViewStudentInfo implements ActionListener{
 			}
 		}
 		if(e.getSource() == birthCertBtn) {
-			String folderPath = database.getFilePath("Birth Certificate", database.getEnrollmentID(student_id));
+			String folderPath = database.getFilePath("Birth Certificate", database.getEnrollmentID(studentID));
 			folderPath = folderPath.replace("\\", "/");
 			File file = new File(folderPath);
 			
@@ -291,18 +322,20 @@ public class ViewStudentInfo implements ActionListener{
 			}
 		}
 		if(e.getSource() == goodmoralBtn) {
-			String folderPath = database.getFilePath("Good Moral", database.getEnrollmentID(student_id));
+			String folderPath = database.getFilePath("Good Moral", database.getEnrollmentID(studentID));
 			folderPath = folderPath.replace("\\", "/");
 			File file = new File(folderPath);
 			
 			try {
 				if (file.exists()) {Desktop.getDesktop().open(file);}
-				else {JOptionPane.showMessageDialog(null, "File not found!");}
+				else {JOptionPane.showMessageDialog(frame, "File not found!");}
 			}
 			catch(Exception error) {
 				error.printStackTrace();
 			}
 		}
+		
+		
 		
 	}
 	

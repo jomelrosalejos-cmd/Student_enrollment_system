@@ -451,7 +451,6 @@ public class EnrollmentForm implements ActionListener{
         try {
 			Files.copy(birthCertsource, birthCertdestination, StandardCopyOption.REPLACE_EXISTING);
 			System.out.println("Uploaded to: " + birthCertdestination.toString());
-			
 		}
         catch (IOException exc) {
 			exc.printStackTrace();
@@ -521,6 +520,9 @@ public class EnrollmentForm implements ActionListener{
 	        hasError = true;}
 		else if (firstname.length() > 50) {
 	        JOptionPane.showMessageDialog(frame, "First name is too long. Max 50 characters.");
+	        hasError = true;}
+		else if (middlename.length() > 50) {
+	        JOptionPane.showMessageDialog(frame, "Middle name is too long. Max 50 characters.");
 	        hasError = true;}
 		else if (phonenumber.length() > 11) {
 	        JOptionPane.showMessageDialog(frame, "Phone number is too long. Max 11 digits.");

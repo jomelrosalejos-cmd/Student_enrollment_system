@@ -41,6 +41,7 @@ public class RegistrarDashboard implements ActionListener{
 	
 	JButton searchStudentButton;
 	JButton moreInfo;
+	JButton updateStudentButton;
 
 	JTable studentTable;
 	
@@ -280,7 +281,7 @@ public class RegistrarDashboard implements ActionListener{
 		searchStudentButton.setBounds(316, 499, 89, 23);
 		contentPanel.add(searchStudentButton);
 		
-		JButton updateStudentButton = new JButton("Update");
+		updateStudentButton = new JButton("Update");
 		updateStudentButton.setFocusable(false);
 		updateStudentButton.addActionListener(this);
 		updateStudentButton.setBounds(417, 499, 89, 23);
@@ -353,6 +354,17 @@ public class RegistrarDashboard implements ActionListener{
 		if(e.getSource() == btnLogOut) {
 			System.exit(0);
 		}
+		
+		if(e.getSource() == updateStudentButton) {
+			try {
+				int value = Integer.parseInt(studentSearchField.getText().trim());
+				new EditStudentInfo(value);
+			}
+			catch(NumberFormatException n) {
+				System.out.println("INVALID STUDENT ID!");
+			}
+		}
+		
 	}
 	
 	public void setTableColumnSize() {
