@@ -26,10 +26,13 @@ public class DatabaseConnection {
 	private String middleName;
 	private String birthdate;
 	private String gender;
-	private String address;
-	private String phoneNumber;
+	private String sectionName;
+	private String adviserName;
 	private int strandID;
 	private int enrollmentID;
+	private int sectionID;
+	private String enrollmentStatus;
+	private String schoolYear;
 
 	static Connection connection;
 	static {
@@ -187,12 +190,6 @@ public class DatabaseConnection {
 		
 	}
 	
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	public String getAddress() {
-		return address;
-	}
 	public String getGender() {
 		return gender;
 	}
@@ -229,9 +226,11 @@ public class DatabaseConnection {
 		try {
 			PreparedStatement statement2 = connection.prepareStatement(studentIDquery);
 			statement2.setInt(1, getStudentID());
-			ResultSet resultEnrollmentID = statement2.executeQuery();
-			if (resultEnrollmentID.next()) {
-			    enrollmentID = resultEnrollmentID.getInt("enrollment_id");
+			ResultSet resultSet = statement2.executeQuery();
+			if (resultSet.next()) {
+			    enrollmentID = resultSet.getInt("enrollment_id");
+			    enrollmentStatus = resultSet.getString("status");
+			    schoolYear = resultSet.getString("created_at");
 			}
 		}
 		catch (SQLException e) {
@@ -266,6 +265,84 @@ public class DatabaseConnection {
 	
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public String getSection() {
+		return sectionName;
+	}
+	
+	public String getAdviserName() {
+		return adviserName;
+	}
+	
+	public String getEnrollmentStatus() {
+		return enrollmentStatus;
+	}
+	
+	public String getSchoolYear() {
+		int year = Integer.parseInt(schoolYear.substring(0, 4));
+		String schoolYear = year + "-" + (year + 1);
+		
+		return schoolYear;
+	}
+	
+	public void getSectionID() {
+		String query = "SELECT section_id FROM enrollments WHERE enrollment_id = ?;";
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+				sectionID = resultSet.getInt("section_id");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void getClassInfo() {
+		String query = "SELECT section_name, last_name, first_name, middle_name "
+				+ "FROM teachers INNER JOIN sections ON teachers.teacher_id = sections.teacher_id WHERE sections.section_id = ? ;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, sectionID);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+				sectionName = resultSet.getString("section_name");
+				adviserName = resultSet.getString("first_name") + " " + resultSet.getString("last_name");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getRequirementsStatus(String documentType) {
+		String query = "SELECT status FROM student_requirements "
+				+ "WHERE enrollment_id = ? AND document_type = ?;";
+		
+		String status = "PENDING";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			statement.setString(2, documentType);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+				status =  resultSet.getString("status");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return status;
+		
 	}
 	
 }

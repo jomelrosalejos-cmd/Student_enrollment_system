@@ -31,6 +31,9 @@ public class StudentDashBoard implements ActionListener {
 	
 	public StudentDashBoard(DatabaseConnection database) {
 		database.studentInformation();
+		database.getEnrollmentID();
+		database.getSectionID();
+		database.getClassInfo();
 		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
@@ -167,13 +170,29 @@ public class StudentDashBoard implements ActionListener {
 		linePanel.setBounds(10, 34, 600, 2);
 		reqStatusPanel.add(linePanel);
 		
-		JLabel submissionStatus_form137 = new JLabel("Pending");
+		String form137 = database.getRequirementsStatus("Form-137");
+		JLabel submissionStatus_form137 = new JLabel();
 		submissionStatus_form137.setOpaque(true);
-		submissionStatus_form137.setBorder(new LineBorder(new Color(183, 151, 84)));
-		submissionStatus_form137.setBackground(new Color(255, 243, 212));
-		submissionStatus_form137.setForeground(new Color(183, 151, 84));
 		submissionStatus_form137.setHorizontalAlignment(SwingConstants.CENTER);
 		submissionStatus_form137.setBounds(497, 12, 80, 16);
+
+		if (form137.equals("APPROVED")) {
+		    submissionStatus_form137.setText("Approved");
+		    submissionStatus_form137.setBackground(new Color(212, 237, 218));
+		    submissionStatus_form137.setForeground(new Color(40, 167, 69));
+		    submissionStatus_form137.setBorder(new LineBorder(new Color(40, 167, 69)));
+		} else if (form137.equals("REJECTED")) {
+		    submissionStatus_form137.setText("Rejected");
+		    submissionStatus_form137.setBackground(new Color(248, 215, 218));
+		    submissionStatus_form137.setForeground(new Color(220, 53, 69));
+		    submissionStatus_form137.setBorder(new LineBorder(new Color(220, 53, 69)));
+		} else {
+		    submissionStatus_form137.setText("Pending");
+		    submissionStatus_form137.setBackground(new Color(255, 243, 212));
+		    submissionStatus_form137.setForeground(new Color(183, 151, 84));
+		    submissionStatus_form137.setBorder(new LineBorder(new Color(183, 151, 84)));
+		}
+
 		reqStatusPanel.add(submissionStatus_form137);
 		
 		JPanel linePanel_1 = new JPanel() {
@@ -192,13 +211,28 @@ public class StudentDashBoard implements ActionListener {
 		goodMoralLabel.setBounds(10, 45, 170, 14);
 		reqStatusPanel.add(goodMoralLabel);
 		
-		JLabel submissionStatus_goodMoral = new JLabel("Pending");
+		String goodMoral = database.getRequirementsStatus("Good Moral");
+		JLabel submissionStatus_goodMoral = new JLabel();
 		submissionStatus_goodMoral.setOpaque(true);
 		submissionStatus_goodMoral.setHorizontalAlignment(SwingConstants.CENTER);
-		submissionStatus_goodMoral.setForeground(new Color(183, 151, 84));
-		submissionStatus_goodMoral.setBorder(new LineBorder(new Color(183, 151, 84)));
-		submissionStatus_goodMoral.setBackground(new Color(255, 243, 212));
 		submissionStatus_goodMoral.setBounds(497, 45, 80, 16);
+		if (goodMoral.equals("APPROVED")) {
+		    submissionStatus_goodMoral.setText("Approved");
+		    submissionStatus_goodMoral.setBackground(new Color(212, 237, 218));
+		    submissionStatus_goodMoral.setForeground(new Color(40, 167, 69));
+		    submissionStatus_goodMoral.setBorder(new LineBorder(new Color(40, 167, 69)));
+		} else if (goodMoral.equals("REJECTED")) {
+		    submissionStatus_goodMoral.setText("Rejected");
+		    submissionStatus_goodMoral.setBackground(new Color(248, 215, 218));
+		    submissionStatus_goodMoral.setForeground(new Color(220, 53, 69));
+		    submissionStatus_goodMoral.setBorder(new LineBorder(new Color(220, 53, 69)));
+		} else {
+		    submissionStatus_goodMoral.setText("Pending");
+		    submissionStatus_goodMoral.setBackground(new Color(255, 243, 212));
+		    submissionStatus_goodMoral.setForeground(new Color(183, 151, 84));
+		    submissionStatus_goodMoral.setBorder(new LineBorder(new Color(183, 151, 84)));
+		}
+
 		reqStatusPanel.add(submissionStatus_goodMoral);
 		
 		JPanel linePanel_2 = new JPanel() {
@@ -216,26 +250,60 @@ public class StudentDashBoard implements ActionListener {
 		birthCertLabel.setForeground(new Color(48, 46, 127));
 		birthCertLabel.setBounds(10, 81, 170, 14);
 		reqStatusPanel.add(birthCertLabel);
-		JLabel submissionStatus_BirthCert = new JLabel("Pending");
+		
+		String birthCertificate = database.getRequirementsStatus("Birth Certificate");
+		JLabel submissionStatus_BirthCert = new JLabel();
 		submissionStatus_BirthCert.setOpaque(true);
 		submissionStatus_BirthCert.setHorizontalAlignment(SwingConstants.CENTER);
-		submissionStatus_BirthCert.setForeground(new Color(183, 151, 84));
-		submissionStatus_BirthCert.setBorder(new LineBorder(new Color(183, 151, 84)));
-		submissionStatus_BirthCert.setBackground(new Color(255, 243, 212));
 		submissionStatus_BirthCert.setBounds(497, 81, 80, 16);
+
+		if (birthCertificate.equals("APPROVED")) {
+		    submissionStatus_BirthCert.setText("Approved");
+		    submissionStatus_BirthCert.setBackground(new Color(212, 237, 218));
+		    submissionStatus_BirthCert.setForeground(new Color(40, 167, 69));
+		    submissionStatus_BirthCert.setBorder(new LineBorder(new Color(40, 167, 69)));
+		} else if (birthCertificate.equals("REJECTED")) {
+		    submissionStatus_BirthCert.setText("Rejected");
+		    submissionStatus_BirthCert.setBackground(new Color(248, 215, 218));
+		    submissionStatus_BirthCert.setForeground(new Color(220, 53, 69));
+		    submissionStatus_BirthCert.setBorder(new LineBorder(new Color(220, 53, 69)));
+		} else {
+		    submissionStatus_BirthCert.setText("Pending");
+		    submissionStatus_BirthCert.setBackground(new Color(255, 243, 212));
+		    submissionStatus_BirthCert.setForeground(new Color(183, 151, 84));
+		    submissionStatus_BirthCert.setBorder(new LineBorder(new Color(183, 151, 84)));
+		}
+
 		reqStatusPanel.add(submissionStatus_BirthCert);
 		
 		JLabel IDpicLabel = new JLabel("📄 2x2 ID Picture (2 pcs)");
 		IDpicLabel.setForeground(new Color(48, 46, 127));
 		IDpicLabel.setBounds(10, 119, 170, 14);
 		reqStatusPanel.add(IDpicLabel);
-		JLabel submissionStatus_2x2ID = new JLabel("Pending");
+		
+		String idPicture = database.getRequirementsStatus("ID Picture");
+		JLabel submissionStatus_2x2ID = new JLabel();
 		submissionStatus_2x2ID.setOpaque(true);
 		submissionStatus_2x2ID.setHorizontalAlignment(SwingConstants.CENTER);
-		submissionStatus_2x2ID.setForeground(new Color(183, 151, 84));
-		submissionStatus_2x2ID.setBorder(new LineBorder(new Color(183, 151, 84)));
-		submissionStatus_2x2ID.setBackground(new Color(255, 243, 212));
 		submissionStatus_2x2ID.setBounds(497, 119, 80, 16);
+
+		if (idPicture.equals("APPROVED")) {
+		    submissionStatus_2x2ID.setText("Approved");
+		    submissionStatus_2x2ID.setBackground(new Color(212, 237, 218));
+		    submissionStatus_2x2ID.setForeground(new Color(40, 167, 69));
+		    submissionStatus_2x2ID.setBorder(new LineBorder(new Color(40, 167, 69)));
+		} else if (idPicture.equals("REJECTED")) {
+		    submissionStatus_2x2ID.setText("Rejected");
+		    submissionStatus_2x2ID.setBackground(new Color(248, 215, 218));
+		    submissionStatus_2x2ID.setForeground(new Color(220, 53, 69));
+		    submissionStatus_2x2ID.setBorder(new LineBorder(new Color(220, 53, 69)));
+		} else {
+		    submissionStatus_2x2ID.setText("Pending");
+		    submissionStatus_2x2ID.setBackground(new Color(255, 243, 212));
+		    submissionStatus_2x2ID.setForeground(new Color(183, 151, 84));
+		    submissionStatus_2x2ID.setBorder(new LineBorder(new Color(183, 151, 84)));
+		}
+
 		reqStatusPanel.add(submissionStatus_2x2ID);
 		
 		JPanel enrollmentDetailsPanel = new JPanel();
@@ -254,22 +322,22 @@ public class StudentDashBoard implements ActionListener {
 		strandLabel.setBounds(10, 45, 255, 23);
 		enrollmentDetailsPanel.add(strandLabel);
 		
-		JLabel adviserLabel = new JLabel("Adviser: ");
+		JLabel adviserLabel = new JLabel("Adviser: " + database.getAdviserName());
 		adviserLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		adviserLabel.setBounds(10, 79, 255, 23);
 		enrollmentDetailsPanel.add(adviserLabel);
 		
-		JLabel secitonLabel = new JLabel("Section: ");
+		JLabel secitonLabel = new JLabel("Section: " + database.getSection());
 		secitonLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		secitonLabel.setBounds(10, 107, 255, 23);
 		enrollmentDetailsPanel.add(secitonLabel);
 		
-		JLabel enrollmentStatusLabel = new JLabel("Status: ");
+		JLabel enrollmentStatusLabel = new JLabel("Status: " + database.getEnrollmentStatus());
 		enrollmentStatusLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		enrollmentStatusLabel.setBounds(348, 11, 161, 23);
 		enrollmentDetailsPanel.add(enrollmentStatusLabel);
 		
-		JLabel schoolYearLabel = new JLabel("School Year: ");
+		JLabel schoolYearLabel = new JLabel("School Year: " + database.getSchoolYear());
 		schoolYearLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		schoolYearLabel.setBounds(348, 45, 194, 23);
 		enrollmentDetailsPanel.add(schoolYearLabel);
@@ -286,7 +354,16 @@ public class StudentDashBoard implements ActionListener {
 		mainPanel.add(enrollmentDetailsLabel);
 		
 		//progress step
-		ProgressPanel progressPanel = new ProgressPanel();
+		int currentStep = 3;
+		if(form137.equals("APPROVED") && goodMoral.equals("APPROVED")
+				&& birthCertificate.equals("APPROVED") && idPicture.equals("APPROVED")) {
+			currentStep++;
+		}
+		if(database.getEnrollmentStatus().equals("ENROLLED")) {
+			currentStep++;
+		}
+		
+		ProgressPanel progressPanel = new ProgressPanel(currentStep);
 		progressPanel.setBackground(new Color(245, 246, 251));
 		progressPanel.setBounds(61, 79, 541, 50);
 		mainPanel.add(progressPanel);

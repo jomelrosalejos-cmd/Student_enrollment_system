@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -318,12 +319,16 @@ public class RegistrarDashboard implements ActionListener{
 		}
 		if(e.getSource() == moreInfo) {
 			try {
+				
 				int value = Integer.parseInt(studentSearchField.getText().trim());
-				new ViewStudentInfo(value);
+				if(database.isStudentIdExist(value)) {new ViewStudentInfo(value);}
+				else {JOptionPane.showMessageDialog(frame, "STUDENT ID DOES NOT EXIST");}
+				
 			}
 			catch(NumberFormatException n) {
-				System.out.println("INVALID STUDENT ID!");
+				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
 			}
+			
 		}
 		if(e.getSource() == filterPendingButton) {
 			row = database.getPendingEnrollments();
@@ -345,6 +350,7 @@ public class RegistrarDashboard implements ActionListener{
 		}
 		
 		if(e.getSource() == refreshButton) {
+			studentSearchField.setText("");
 			row = database.getEnrollments();
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
@@ -357,11 +363,14 @@ public class RegistrarDashboard implements ActionListener{
 		
 		if(e.getSource() == updateStudentButton) {
 			try {
+				
 				int value = Integer.parseInt(studentSearchField.getText().trim());
-				new EditStudentInfo(value);
+				if(database.isStudentIdExist(value)) {new EditStudentInfo(value);}
+				else {JOptionPane.showMessageDialog(frame, "STUDENT ID DOES NOT EXIST");}
+				
 			}
 			catch(NumberFormatException n) {
-				System.out.println("INVALID STUDENT ID!");
+				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
 			}
 		}
 		

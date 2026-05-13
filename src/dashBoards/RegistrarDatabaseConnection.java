@@ -389,4 +389,58 @@ public class RegistrarDatabaseConnection {
 		}
 	}
 	
+	public void updateEnrollmentStatus(String status, int enrollmentID) {
+		String query = "UPDATE enrollments SET status = ? "
+				+ "WHERE enrollment_id = ? ;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, status);
+			statement.setInt(2, enrollmentID);
+			
+			int resultSet = statement.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getEnrollmentStatus(int enrollmentID) {
+		String query = "SELECT status FROM enrollments WHERE enrollment_id = ?;";
+		String status = "";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, enrollmentID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if(resultSet.next()) {
+				status = resultSet.getString("status");
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return status;
+	}
+	
+	public boolean isStudentIdExist(int studentID) {
+		String query = "SELECT student_id FROM students WHERE student_id = ?;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, studentID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			return resultSet.next();
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 }

@@ -35,6 +35,7 @@ public class EditStudentInfo implements ActionListener{
 	private JTextField addressTextfield;
 	private JTextField emailTextfield;
 	private JTextField usernameTextfield;
+	private JComboBox enrollmentComboBox;
 	
 	int studentID;
 	int enrollmentID;
@@ -216,12 +217,24 @@ public class EditStudentInfo implements ActionListener{
 		panel.add(usernameTextfield);
 		
 		JLabel middleName = new JLabel("Middle Name: ");
-		middleName.setBounds(10, 44, 81, 14);
+		middleName.setBounds(9, 44, 86, 14);
 		panel.add(middleName);
 		
 		JLabel lastName = new JLabel("Last Name: ");
 		lastName.setBounds(10, 72, 79, 14);
 		panel.add(lastName);
+		
+		JLabel lblStatus = new JLabel("Status: ");
+		lblStatus.setBounds(10, 323, 72, 14);
+		panel.add(lblStatus);
+		
+		
+		String[] enrollmentStatus = {"PENDING", "ENROLLED", "REJECTED"};
+		enrollmentComboBox = new JComboBox(enrollmentStatus);
+		enrollmentComboBox.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		enrollmentComboBox.setSelectedItem(database.getEnrollmentStatus(database.getEnrollmentID(studentID)));
+		enrollmentComboBox.setBounds(92, 319, 101, 20);
+		panel.add(enrollmentComboBox);
 		
 		frame.setVisible(true);
 	}
@@ -242,6 +255,7 @@ public class EditStudentInfo implements ActionListener{
 			String email = emailTextfield.getText().trim();
 			String lrn = lrnTextField.getText().trim();
 			String address = addressTextfield.getText().trim();
+			String status = (String) enrollmentComboBox.getSelectedItem();
 			
 			if (lastName.length() > 50) {
 		        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.");
@@ -285,6 +299,7 @@ public class EditStudentInfo implements ActionListener{
 					database.updateStudentInfo(firstName,  middleName,  lastName, 
 							 lrn, String.valueOf(birthdate),  gender,  phoneNumber,  address,  email, 
 							 username,  password, studentID);
+					database.updateEnrollmentStatus(status, database.getEnrollmentID(studentID));
 					JOptionPane.showMessageDialog(frame, "Changes have been saved");
 					frame.dispose();
 				}
