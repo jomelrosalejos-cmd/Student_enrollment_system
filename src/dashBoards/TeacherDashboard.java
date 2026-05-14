@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,7 +28,7 @@ public class TeacherDashboard {
 	Image imageLogo;
 	Image iconImage;
 	
-	public TeacherDashboard() {
+	public TeacherDashboard(Principal_TeacherDatabaseConnection database) {
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
@@ -62,6 +63,8 @@ public class TeacherDashboard {
 		panel_logo.setBounds(0, 104, 180, 180);
 		leftPanel.add(panel_logo);
 		
+		String[] sectionInfo = database.getSectionInfo();
+		
 		JPanel dashBoTitlePanel = new JPanel();
 		dashBoTitlePanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(251, 181, 23), null));
 		dashBoTitlePanel.setBackground(new Color(0, 0, 128));
@@ -94,9 +97,9 @@ public class TeacherDashboard {
 		userSilhouette.setBounds(8, 11, 30, 40);
 		teacherNamePanel.add(userSilhouette);
 		
-		JLabel teacherName = new JLabel("Benigno Pelaso");
+		JLabel teacherName = new JLabel(sectionInfo[2]);
 		teacherName.setForeground(Color.WHITE);
-		teacherName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		teacherName.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		teacherName.setBounds(42, 11, 152, 20);
 		teacherNamePanel.add(teacherName);
 		
@@ -133,7 +136,7 @@ public class TeacherDashboard {
 		mainPanel.add(headerPanel);
 		headerPanel.setLayout(null);
 		
-		JLabel headerTitle = new JLabel("School Year · 2024–2025");
+		JLabel headerTitle = new JLabel("School Year · 2026–2027");
 		headerTitle.setForeground(new Color(48, 46, 127));
 		headerTitle.setFont(new Font("Serif", Font.PLAIN, 22));
 		headerTitle.setBounds(45, 11, 468, 48);
@@ -151,8 +154,7 @@ public class TeacherDashboard {
 		mainPanel.add(strandAssignmentPanel);
 		strandAssignmentPanel.setLayout(null);
 		
-		String strand = "STEM";
-		JLabel strandAssigned = new JLabel(strand);
+		JLabel strandAssigned = new JLabel(sectionInfo[1]);
 		strandAssigned.setForeground(new Color(0, 227, 0));
 		strandAssigned.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		strandAssigned.setBounds(10, 7, 107, 21);
@@ -171,11 +173,8 @@ public class TeacherDashboard {
 		JLabel classSizeLabel = new JLabel("Class Size");
 		classSizeLabel.setBounds(10, 29, 92, 14);
 		classSizePanel.add(classSizeLabel);
-		
-		int classSize = 40;
-		String strClassSize = String.valueOf(classSize);
 	
-		JLabel classSizeNumber = new JLabel(strClassSize);
+		JLabel classSizeNumber = new JLabel(sectionInfo[3]);
 		classSizeNumber.setForeground(new Color(236, 167, 4));
 		classSizeNumber.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		classSizeNumber.setBounds(10, 7, 73, 21);
@@ -187,7 +186,7 @@ public class TeacherDashboard {
 		mainPanel.add(sectionPanel);
 		sectionPanel.setLayout(null);
 		
-		JLabel sectionAssigned = new JLabel("Grade 11-A");
+		JLabel sectionAssigned = new JLabel(sectionInfo[0]);
 		sectionAssigned.setForeground(new Color(128, 0, 128));
 		sectionAssigned.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		sectionAssigned.setBounds(10, 7, 140, 21);
@@ -207,8 +206,10 @@ public class TeacherDashboard {
 		searchStudentLabel.setBounds(21, 177, 189, 14);
 		mainPanel.add(searchStudentLabel);
 		
-		String[] column = {"#","Name", "Gender"};
-		Object[][] data = {{1, "Rosalejos, Jomel M.", "Male"}};
+		ArrayList<Object[]> row = database.getStudentsInSection();
+		Object[][] data = row.toArray(new Object[0][]);
+		
+		String[] column = {"Student ID","Name","LRN", "Birthdate", "Gender"};
 		
 		JTable table = new JTable(data, column) {
 			@Override

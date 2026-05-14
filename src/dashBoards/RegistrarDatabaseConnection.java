@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class RegistrarDatabaseConnection {
 	
 	private static String url = "jdbc:mysql://localhost:3306/student_enrollment_db_system";
@@ -27,7 +29,8 @@ public class RegistrarDatabaseConnection {
 	
 	
 	public ArrayList<Object[]> getEnrollments() {
-		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id;";
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, "
+		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
@@ -441,6 +444,58 @@ public class RegistrarDatabaseConnection {
 		}
 		
 		return false;
+	}
+	
+	public void approveAndAssignSection(int enrollmentId, int studentId) {
+	    try {
+	        // Get student's strand
+	        String getStrandQuery = "SELECT strand_id FROM students WHERE student_id = ?";
+	        PreparedStatement strandStmt = connection.prepareStatement(getStrandQuery);
+	        strandStmt.setInt(1, studentId);
+	        ResultSet strandRs = strandStmt.executeQuery();
+
+	        int strandId = -1;
+	        if (strandRs.next()) {
+	            strandId = strandRs.getInt("strand_id");
+	        }
+
+	        if (strandId == -1) {
+	            JOptionPane.showMessageDialog(null, "Strand not found!");
+	            return;
+	        }
+
+	        // Find available section
+	        String getSectionQuery = "SELECT sections.section_id FROM sections " +
+	                "WHERE sections.strand_id = ? " +
+	                "AND (SELECT COUNT(*) FROM enrollments " +
+	                "WHERE enrollments.section_id = sections.section_id " +
+	                "AND status = 'ENROLLED') < sections.capacity " +
+	                "LIMIT 1";
+	        PreparedStatement sectionStmt = connection.prepareStatement(getSectionQuery);
+	        sectionStmt.setInt(1, strandId);
+	        ResultSet sectionRs = sectionStmt.executeQuery();
+
+	        int sectionId = -1;
+	        if (sectionRs.next()) {
+	            sectionId = sectionRs.getInt("section_id");
+	        }
+
+	        if (sectionId == -1) {
+	            JOptionPane.showMessageDialog(null, "No available section for this strand!");
+	            return;
+	        }
+
+	        // Assign section + update status
+	        String updateQuery = "UPDATE enrollments SET section_id = ?, " +
+	                "status = 'ENROLLED' WHERE enrollment_id = ?";
+	        PreparedStatement updateStmt = connection.prepareStatement(updateQuery);
+	        updateStmt.setInt(1, sectionId);
+	        updateStmt.setInt(2, enrollmentId);
+	        updateStmt.executeUpdate();
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 }

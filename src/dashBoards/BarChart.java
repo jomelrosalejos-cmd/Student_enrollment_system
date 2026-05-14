@@ -5,8 +5,10 @@ import java.awt.*;
 public class BarChart extends JPanel {
    
 	int[] strands = {0, 0, 0, 0, 0, 0};
+	int totalStudents;
 	
-	BarChart(int []totalPerStrand){
+	BarChart(int []totalPerStrand, int totalStudents){
+		this.totalStudents = totalStudents;
 		for(int i = 0; i < totalPerStrand.length; i++) {
 			strands[i] = totalPerStrand[i];
 		}
@@ -21,7 +23,7 @@ public class BarChart extends JPanel {
         int space = 40;
         int startPos = 50;
         for(int i = 0; i < strands.length; i++) {
-        	double percentage = 300 * (strands[i] / 800.00); 
+        	double percentage = 300 * (strands[i] / (double) totalStudents); 
         	int barPerc = (int) Math.round(percentage);
         	
         	g.drawRect(19, startPos, 300, 20);

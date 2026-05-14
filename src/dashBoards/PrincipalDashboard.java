@@ -27,6 +27,8 @@ public class PrincipalDashboard {
 	Image imageLogo;
 	Image iconImage;
 	
+	Principal_TeacherDatabaseConnection database = new Principal_TeacherDatabaseConnection();
+	
 	public PrincipalDashboard() {
 		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
@@ -156,17 +158,18 @@ public class PrincipalDashboard {
 		String strTotalTeacher = String.valueOf(totalTeacher);
 		
 		String[] column = {"Strand", "Total Students"};
-		int[] totalPerStrand = {150, 100, 150, 50, 50, 300};
+		int[] totalPerStrand = {database.getTotalABMstudents(), database.getTotalGASstudents(), database.getTotalHUMSSstudents(),
+				database.getTotalICTstudents(), database.getTotalSTEMstudents(), database.getTotalEIMstudents()};
 		Object[][] data = {
 				{"ABM", totalPerStrand[0]},
-				{"IA", totalPerStrand[1]},
-				{"ICT", totalPerStrand[2]},
-				{"HUMSS", totalPerStrand[3]},
-				{"GAS", totalPerStrand[4]},
-				{"STEM", totalPerStrand[5]}
+				{"GAS", totalPerStrand[1]},
+				{"HUMSS", totalPerStrand[2]},
+				{"ICT", totalPerStrand[3]},
+				{"STEM", totalPerStrand[4]},
+				{"EIM", totalPerStrand[5]}
 				};
 		
-		BarChart chart = new BarChart(totalPerStrand);
+		BarChart chart = new BarChart(totalPerStrand, database.getTotalStudents());
 		chart.setBackground(Color.white);
 		chart.setBounds(22, 211, 340, 300);
 		chart.setLayout(null);
@@ -186,27 +189,39 @@ public class PrincipalDashboard {
 		strandTableScrollPane.setBounds(393, 211, 200, 119);
 		contentPanel.add(strandTableScrollPane);
 		
-		JLabel chartLabelIA = new JLabel("IA");
-		chartLabelIA.setBounds(20, 75, 109, 14);
-		chart.add(chartLabelIA);
-		
-		JLabel chartLabelICT = new JLabel("ICT");
-		chartLabelICT.setBounds(20, 115, 109, 14);
-		chart.add(chartLabelICT);
-		
-		JLabel chartLabelGAS = new JLabel("GAS");
-		chartLabelGAS.setBounds(20, 155, 109, 14);
+		String GASPercentage = String.format("%.2f", 
+		(double) database.getTotalGASstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelGAS = new JLabel("GAS: " + GASPercentage+ "%");
+		chartLabelGAS.setBounds(20, 75, 109, 14);
 		chart.add(chartLabelGAS);
 		
-		JLabel chartLabelHUMSS = new JLabel("HUMSS");
-		chartLabelHUMSS.setBounds(20, 196, 109, 14);
-		chart.add(chartLabelHUMSS);
+		String HUMSSPercentage = String.format("%.2f", 
+		(double) database.getTotalHUMSSstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelHUMMS = new JLabel("HUMSS: " + HUMSSPercentage + "%");
+		chartLabelHUMMS.setBounds(20, 115, 109, 14);
+		chart.add(chartLabelHUMMS);
 		
-		JLabel chartLabelSTEM = new JLabel("STEM");
-		chartLabelSTEM.setBounds(20, 236, 109, 14);
+		String ICTPercentage = String.format("%.2f", 
+		(double) database.getTotalICTstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelICT = new JLabel("ICT: " + ICTPercentage + "%");
+		chartLabelICT.setBounds(20, 155, 109, 14);
+		chart.add(chartLabelICT);
+		
+		String STEMPercentage = String.format("%.2f", 
+		(double) database.getTotalSTEMstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelSTEM = new JLabel("STEM: " + STEMPercentage + "%");
+		chartLabelSTEM.setBounds(20, 196, 109, 14);
 		chart.add(chartLabelSTEM);
 		
-		JLabel chartLabelABM = new JLabel("ABM");
+		String EIMPercentage = String.format("%.2f", 
+		(double) database.getTotalEIMstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelEIM = new JLabel("EIM: " + EIMPercentage + "%");
+		chartLabelEIM.setBounds(20, 236, 109, 14);
+		chart.add(chartLabelEIM);
+		
+		String ABMPercentage = String.format("%.2f", 
+		(double) database.getTotalABMstudents() / (double) database.getTotalStudents() * 100.0 );
+		JLabel chartLabelABM = new JLabel("ABM: " + ABMPercentage + "%");
 		chartLabelABM.setBounds(20, 35, 109, 14);
 		chart.add(chartLabelABM);
 		
@@ -216,7 +231,7 @@ public class PrincipalDashboard {
 		totalStudentsCard.setBounds(22, 81, 176, 52);
 		contentPanel.add(totalStudentsCard);
 		
-		JLabel totalStudentsValueLabel = new JLabel("800");
+		JLabel totalStudentsValueLabel = new JLabel(String.valueOf(database.getTotalStudents()));
 		totalStudentsValueLabel.setForeground(new Color(0, 227, 0));
 		totalStudentsValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		totalStudentsValueLabel.setBounds(10, 7, 73, 21);
@@ -236,7 +251,7 @@ public class PrincipalDashboard {
 		totalSectionsTitleLabel.setBounds(10, 29, 92, 14);
 		totalSectionsCard.add(totalSectionsTitleLabel);
 		
-		JLabel totalSectionsValueLabel = new JLabel("40");
+		JLabel totalSectionsValueLabel = new JLabel(String.valueOf(database.getTotalSections()));
 		totalSectionsValueLabel.setForeground(new Color(236, 167, 4));
 		totalSectionsValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		totalSectionsValueLabel.setBounds(10, 7, 73, 21);
@@ -248,7 +263,7 @@ public class PrincipalDashboard {
 		totalTeachersCard.setBounds(430, 81, 176, 52);
 		contentPanel.add(totalTeachersCard);
 		
-		JLabel totalTeachersValueLabel = new JLabel("70");
+		JLabel totalTeachersValueLabel = new JLabel(String.valueOf(database.getTotalTeachers()));
 		totalTeachersValueLabel.setForeground(new Color(128, 0, 128));
 		totalTeachersValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		totalTeachersValueLabel.setBounds(10, 7, 140, 21);
@@ -264,7 +279,7 @@ public class PrincipalDashboard {
 		schoolYearCard.setBounds(22, 139, 176, 52);
 		contentPanel.add(schoolYearCard);
 		
-		JLabel schoolYearValueLabel = new JLabel("2024-2025");
+		JLabel schoolYearValueLabel = new JLabel(database.getSchoolYear());
 		schoolYearValueLabel.setForeground(new Color(255, 128, 128));
 		schoolYearValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		schoolYearValueLabel.setBounds(10, 7, 140, 21);

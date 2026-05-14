@@ -357,10 +357,10 @@ public class StudentDashBoard implements ActionListener {
 		int currentStep = 3;
 		if(form137.equals("APPROVED") && goodMoral.equals("APPROVED")
 				&& birthCertificate.equals("APPROVED") && idPicture.equals("APPROVED")) {
-			currentStep++;
+			currentStep+=1;
 		}
 		if(database.getEnrollmentStatus().equals("ENROLLED")) {
-			currentStep++;
+			currentStep+=1;
 		}
 		
 		ProgressPanel progressPanel = new ProgressPanel(currentStep);

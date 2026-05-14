@@ -296,12 +296,18 @@ public class EditStudentInfo implements ActionListener{
 				int response = JOptionPane.showConfirmDialog(frame, "Save changes?", "Confirm", JOptionPane.YES_NO_OPTION);
 					
 				if(response == JOptionPane.YES_OPTION) {
-					database.updateStudentInfo(firstName,  middleName,  lastName, 
-							 lrn, String.valueOf(birthdate),  gender,  phoneNumber,  address,  email, 
-							 username,  password, studentID);
-					database.updateEnrollmentStatus(status, database.getEnrollmentID(studentID));
-					JOptionPane.showMessageDialog(frame, "Changes have been saved");
-					frame.dispose();
+				    database.updateStudentInfo(firstName, middleName, lastName,
+				            lrn, String.valueOf(birthdate), gender, phoneNumber, address, email,
+				            username, password, studentID);
+
+				    if(status.equals("ENROLLED")) {
+				        database.approveAndAssignSection(enrollmentID, studentID);
+				    } else {
+				        database.updateEnrollmentStatus(status, database.getEnrollmentID(studentID));
+				    }
+
+				    JOptionPane.showMessageDialog(frame, "Changes have been saved");
+				    frame.dispose();
 				}
 			}
 		}
