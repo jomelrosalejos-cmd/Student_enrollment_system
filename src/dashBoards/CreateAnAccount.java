@@ -44,6 +44,7 @@ public class CreateAnAccount implements ActionListener{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel panel = new JPanel();
@@ -155,6 +156,15 @@ public class CreateAnAccount implements ActionListener{
 		panel_5.add(btnSignInHere);
 		
 		frame.setVisible(true);
+		JOptionPane.showMessageDialog(frame,
+			    "REMINDERS:\n" +
+			    "• Use appropriate username and password\n" +
+			    "• Username must be at least 6 characters\n" +
+			    "• Password must be at least 8 characters\n" +
+			    "• Email must be valid\n" +
+			    "• All fields are required",
+			    "Reminders",
+			    JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	@Override
@@ -165,28 +175,48 @@ public class CreateAnAccount implements ActionListener{
 		}
 		
 		else if(e.getSource() == btnRegister) {
+			DatabaseConnection dc = new DatabaseConnection();
 			String username = userName.getText().trim();
 			String email = emailAddress.getText().trim();
 			String pass = password.getText().trim();
 			String confirmPass = confirmPassword.getText().trim();
 			
 			if (username.length() > 50) {
-		        JOptionPane.showMessageDialog(frame, "Username is too long. Max 50 characters.");
+		        JOptionPane.showMessageDialog(frame, "Username is too long. Max 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 		        return;}
+			else if(username.length() < 6) {
+				JOptionPane.showMessageDialog(frame, "Username is too short. Minimum of 6 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+			}
+			else if(!email.contains("@gmail.com")) {
+				JOptionPane.showMessageDialog(frame, "Wrong email format", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			else if(email.length() < 6) {
+				JOptionPane.showMessageDialog(frame, "Email is too short. Minimum of 16 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+			}
 			else if (email.length() > 40) {
-		        JOptionPane.showMessageDialog(frame, "Email Address is too long. Max 40 characters.");
+		        JOptionPane.showMessageDialog(frame, "Email Address is too long. Max 40 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 		        return;}
-			else if (pass.length() > 255 || confirmPass.length() > 255) {
-		        JOptionPane.showMessageDialog(frame, "Password is too long. Max 255 digits.");
+			else if(pass.length() < 8 || confirmPass.length() < 8) {
+				JOptionPane.showMessageDialog(frame, "Password is too short. Minimum of 8 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return;
+			}
+			else if (pass.length() > 255 || confirmPass.length() > 100) {
+		        JOptionPane.showMessageDialog(frame, "Password is too long. Max 100 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 		        return;}
+			if(username.isBlank() || email.isBlank() || pass.isBlank() || confirmPass.isBlank()) {
+				JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
-			if(username.isEmpty() || email.isEmpty() || email.isEmpty()) {
-				JOptionPane.showMessageDialog(frame, "Please fill in all required fields:", "Error", JOptionPane.ERROR_MESSAGE);
+			if(dc.isEmailAlreadyInUse(email) == true) {
+				JOptionPane.showMessageDialog(frame, "Email address already in use", "Error", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
 			if(pass.equals(confirmPass)) {
-				DatabaseConnection dc = new DatabaseConnection();
 				dc.createNewAccount(username, pass, email);
 				JOptionPane.showMessageDialog(frame, "Account successfully created");
 				frame.dispose();

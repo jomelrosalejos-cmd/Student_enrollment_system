@@ -53,8 +53,8 @@ public class ViewStudentInfo implements ActionListener{
 		String addressData = String.valueOf(data[6]);
 		String emailData = String.valueOf(data[7]);
 		String userIdData = String.valueOf(data[8]);
-		String firstNameData = String.valueOf(data[12]);
-		String middleNameData = String.valueOf(data[13]);
+		String firstNameData = String.valueOf(data[11]);
+		String middleNameData = String.valueOf(data[12]);
 		
 		String sectionName = String.valueOf(classRoomData[0]);
 		String strandName = String.valueOf(classRoomData[1]);
@@ -272,6 +272,26 @@ public class ViewStudentInfo implements ActionListener{
 		exitButton.setBounds(286, 366, 64, 23);
 		exitButton.addActionListener(this);
 		panel.add(exitButton);
+		
+		// Form 137
+		String form137Status = database.getRequirementsStatus("Form-137", enrollmentID);
+		if(form137Status.equals("APPROVED")) approvedForm137.setSelected(true);
+		else if(form137Status.equals("REJECTED")) rejectedForm137.setSelected(true);
+
+		// Birth Certificate
+		String birthCertStatus = database.getRequirementsStatus("Birth Certificate", enrollmentID);
+		if(birthCertStatus.equals("APPROVED")) approvedBirthCert.setSelected(true);
+		else if(birthCertStatus.equals("REJECTED")) rejectedBirthCert.setSelected(true);
+
+		// Good Moral
+		String goodMoralStatus = database.getRequirementsStatus("Good Moral", enrollmentID);
+		if(goodMoralStatus.equals("APPROVED")) approvedGoodMoral.setSelected(true);
+		else if(goodMoralStatus.equals("REJECTED")) rejectedGoodMoral.setSelected(true);
+
+		// ID Picture
+		String idPicStatus = database.getRequirementsStatus("ID Picture", enrollmentID);
+		if(idPicStatus.equals("APPROVED")) approvedIDpic.setSelected(true);
+		else if(idPicStatus.equals("REJECTED")) rejectedIDpic.setSelected(true);
 		
 		frame.setVisible(true);
 		

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -34,6 +35,8 @@ public class RegistrarDashboard implements ActionListener{
 	Image imageLogo;
 	Image iconImage;
 	
+	JLabel schoolYearTitleLabel;
+	
 	JTextField studentSearchField;
 	
 	JButton filterPendingButton;
@@ -49,15 +52,19 @@ public class RegistrarDashboard implements ActionListener{
 	JFrame frame;
 	JButton btnLogOut;
 	
+	JLabel rejectedValueLabel;
+	JLabel enrolledValueLabel;
+	JLabel pendingValueLabel;
+	
 	JButton refreshButton;
 	
-	ArrayList<Object[]> row = database.getEnrollments();
-	Object[][] data = row.toArray(new Object[0][]);
+	JComboBox schoolYearChooser;
+	
+	ArrayList<Object[]> row;
+	Object[][] data;
 	String[] column = {"studentID", "Name", "LRN", "Gender", "Strand", "Status"};
 	
 	public RegistrarDashboard() {
-		
-		
 		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
@@ -67,6 +74,7 @@ public class RegistrarDashboard implements ActionListener{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel mainPanel = new JPanel();
@@ -156,17 +164,28 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.setLayout(null);
 		
 		JPanel topBarPanel = new JPanel();
-		topBarPanel.setBounds(0, 0, 628, 70);
+		topBarPanel.setBounds(0, 0, 652, 70);
 		topBarPanel.setBackground(new Color(255, 255, 255));
 		topBarPanel.setPreferredSize(new Dimension(0, 70));
 		contentPanel.add(topBarPanel);
 		topBarPanel.setLayout(null);
 		
-		JLabel schoolYearTitleLabel = new JLabel("School Year · 2024–2025");
+		schoolYearTitleLabel = new JLabel("School Year · 2026–2027");
 		schoolYearTitleLabel.setForeground(new Color(48, 46, 127));
 		schoolYearTitleLabel.setFont(new Font("Serif", Font.PLAIN, 22));
 		schoolYearTitleLabel.setBounds(45, 11, 560, 48);
 		topBarPanel.add(schoolYearTitleLabel);
+		
+		schoolYearChooser = new JComboBox();
+		schoolYearChooser.setBounds(500, 25, 112, 22);
+		ArrayList<String> schoolYears = database.getSchoolYears();
+		for(String year : schoolYears) {
+		    schoolYearChooser.addItem(year);
+		}
+		topBarPanel.add(schoolYearChooser);
+		
+		row = database.getEnrollments((String) schoolYearChooser.getSelectedItem());
+		data = row.toArray(new Object[0][]);
 		
 		JLabel topBarIconLabel = new JLabel("📋");
 		topBarIconLabel.setForeground(new Color(48, 46, 127));
@@ -180,10 +199,10 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.add(pendingCard);
 		pendingCard.setLayout(null);
 		
-		int pending = database.getTotalPending("PENDING");
+		int pending = database.getTotalPending("PENDING", (String) schoolYearChooser.getSelectedItem());
 		String strPending = String.valueOf(pending);
 		
-		JLabel pendingValueLabel = new JLabel(strPending);
+		pendingValueLabel = new JLabel(strPending);
 		pendingValueLabel.setForeground(new Color(0, 227, 0));
 		pendingValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		pendingValueLabel.setBounds(10, 7, 99, 21);
@@ -203,10 +222,10 @@ public class RegistrarDashboard implements ActionListener{
 		enrolledTitleLabel.setBounds(10, 29, 92, 14);
 		enrolledCard.add(enrolledTitleLabel);
 		
-		int enrolled = database.getTotalPending("ENROLLED");
+		int enrolled = database.getTotalPending("ENROLLED", (String) schoolYearChooser.getSelectedItem());
 		String strEnrolled = String.valueOf(enrolled);
 		
-		JLabel enrolledValueLabel = new JLabel(strEnrolled);
+		enrolledValueLabel = new JLabel(strEnrolled);
 		enrolledValueLabel.setForeground(new Color(236, 167, 4));
 		enrolledValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		enrolledValueLabel.setBounds(10, 7, 92, 21);
@@ -218,10 +237,10 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.add(rejectedCard);
 		rejectedCard.setLayout(null);
 		
-		int rejected = database.getTotalPending("REJECTED");
+		int rejected = database.getTotalPending("REJECTED", (String) schoolYearChooser.getSelectedItem());
 		String strRejected = String.valueOf(rejected);
 		
-		JLabel rejectedValueLabel = new JLabel(strRejected);
+		rejectedValueLabel = new JLabel(strRejected);
 		rejectedValueLabel.setForeground(new Color(128, 0, 128));
 		rejectedValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		rejectedValueLabel.setBounds(10, 7, 140, 21);
@@ -305,10 +324,22 @@ public class RegistrarDashboard implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == schoolYearChooser) {
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+		    schoolYearTitleLabel.setText("School Year · " + selectedYear);
+		    
+		    row = database.getEnrollments(selectedYear);
+		    data = row.toArray(new Object[0][]);
+		    studentTable.setModel(new DefaultTableModel(data, column));
+		    setTableColumnSize();
+		}
+		
 		if(e.getSource() == searchStudentButton) {
 			try {
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
+				
 				int value = Integer.parseInt(studentSearchField.getText().trim());
-				row = database.searchStudent(value);
+				row = database.searchStudent(value, selectedYear);
 				data = row.toArray(new Object[0][]);
 				studentTable.setModel(new DefaultTableModel(data, column));
 				setTableColumnSize();
@@ -319,11 +350,11 @@ public class RegistrarDashboard implements ActionListener{
 		}
 		if(e.getSource() == moreInfo) {
 			try {
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
 				
 				int value = Integer.parseInt(studentSearchField.getText().trim());
-				if(database.isStudentIdExist(value)) {new ViewStudentInfo(value);}
+				if(database.isStudentIdExist(value, selectedYear)) {new ViewStudentInfo(value);}
 				else {JOptionPane.showMessageDialog(frame, "STUDENT ID DOES NOT EXIST");}
-				
 			}
 			catch(NumberFormatException n) {
 				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
@@ -331,43 +362,54 @@ public class RegistrarDashboard implements ActionListener{
 			
 		}
 		if(e.getSource() == filterPendingButton) {
-			row = database.getPendingEnrollments();
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+			row = database.getPendingEnrollments(selectedYear);
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
 			setTableColumnSize();
 		}
 		if(e.getSource() == filterEnrolledButton) {
-			row = database.getEnrolledEnrollments();
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+			row = database.getEnrolledEnrollments(selectedYear);
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
 			setTableColumnSize();
 		}
 		if(e.getSource() == filterRejectedButton) {
-			row = database.getRejectedEnrollments();
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+			row = database.getRejectedEnrollments(selectedYear);
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
 			setTableColumnSize();
 		}
 		
 		if(e.getSource() == refreshButton) {
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+			
+			enrolledValueLabel.setText(String.valueOf(database.getTotalPending("ENROLLED", selectedYear)));
+			pendingValueLabel.setText(String.valueOf(database.getTotalPending("PENDING", selectedYear)));
+			rejectedValueLabel.setText(String.valueOf(database.getTotalPending("REJECTED", selectedYear)));
+			schoolYearTitleLabel.setText("School Year · " + selectedYear);
+			
 			studentSearchField.setText("");
-			row = database.getEnrollments();
+			row = database.getEnrollments(selectedYear);
 			data = row.toArray(new Object[0][]);
 			studentTable.setModel(new DefaultTableModel(data, column));
 			setTableColumnSize();
 		}
 		
 		if(e.getSource() == btnLogOut) {
+			new LoginStaffAccess();
 			System.exit(0);
 		}
 		
 		if(e.getSource() == updateStudentButton) {
 			try {
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
 				
 				int value = Integer.parseInt(studentSearchField.getText().trim());
-				if(database.isStudentIdExist(value)) {new EditStudentInfo(value);}
+				if(database.isStudentIdExist(value, selectedYear)) {new EditStudentInfo(value);}
 				else {JOptionPane.showMessageDialog(frame, "STUDENT ID DOES NOT EXIST");}
-				
 			}
 			catch(NumberFormatException n) {
 				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");

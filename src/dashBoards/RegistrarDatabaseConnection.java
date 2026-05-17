@@ -28,13 +28,15 @@ public class RegistrarDatabaseConnection {
 	
 	
 	
-	public ArrayList<Object[]> getEnrollments() {
+	public ArrayList<Object[]> getEnrollments(String selectedYear) {
 		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, "
-		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id;";
+		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+		+ "WHERE school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
@@ -55,12 +57,14 @@ public class RegistrarDatabaseConnection {
 		return List;
 	}
 	
-	public ArrayList<Object[]> getPendingEnrollments() {
-		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'PENDING';";
+	public ArrayList<Object[]> getPendingEnrollments(String selectedYear) {
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, "
+		+ "status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'PENDING' AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
@@ -81,12 +85,13 @@ public class RegistrarDatabaseConnection {
 		return List;
 	}
 	
-	public ArrayList<Object[]> getEnrolledEnrollments() {
-		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'ENROLLED';";
+	public ArrayList<Object[]> getEnrolledEnrollments(String selectedYear) {
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'ENROLLED' AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
@@ -107,12 +112,13 @@ public class RegistrarDatabaseConnection {
 		return List;
 	}
 	
-	public ArrayList<Object[]> getRejectedEnrollments() {
-		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'REJECTED';";
+	public ArrayList<Object[]> getRejectedEnrollments(String selectedYear) {
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE status = 'REJECTED' AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
@@ -133,13 +139,15 @@ public class RegistrarDatabaseConnection {
 		return List;
 	}
 	
-	public ArrayList<Object[]> searchStudent(int student_id) {
-		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE students.student_id = ?;";
+	public ArrayList<Object[]> searchStudent(int student_id, String selectedYear) {
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, "
+		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE students.student_id = ? AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setInt(1, student_id);
+			statement.setString(2, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			if(resultSet.next()) {
@@ -264,13 +272,14 @@ public class RegistrarDatabaseConnection {
 		return enrollmentID;
 	}
 	
-	public int getTotalPending(String status) {
-		String query = "SELECT COUNT(*) AS totalPending  FROM enrollments WHERE status = ?;";
+	public int getTotalPending(String status, String selectedYear) {
+		String query = "SELECT COUNT(*) AS totalPending  FROM enrollments WHERE status = ? AND school_year = ?;";
 		int total = 0;
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setString(1, status);
+			statement.setString(2, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 			
 			if(resultSet.next()) {
@@ -428,12 +437,13 @@ public class RegistrarDatabaseConnection {
 		return status;
 	}
 	
-	public boolean isStudentIdExist(int studentID) {
-		String query = "SELECT student_id FROM students WHERE student_id = ?;";
+	public boolean isStudentIdExist(int studentID, String selectedYear) {
+		String query = "SELECT student_id FROM enrollments WHERE student_id = ? AND school_year = ?;";
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setInt(1, studentID);
+			statement.setString(2, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 			
 			return resultSet.next();
@@ -496,6 +506,47 @@ public class RegistrarDatabaseConnection {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public ArrayList<String> getSchoolYears() {
+	    ArrayList<String> schoolYears = new ArrayList<>();
+	    String query = "SELECT DISTINCT school_year FROM enrollments ORDER BY school_year DESC;";
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        while(resultSet.next()) {
+	            schoolYears.add(resultSet.getString("school_year"));
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return schoolYears;
+	}
+	
+	public String getRequirementsStatus(String documentType, int enrollmentID) {
+	    String query = "SELECT status FROM student_requirements " +
+	                   "WHERE document_type = ? AND enrollment_id = ?;";
+	    
+	    String status = "PENDING";
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, documentType);
+	        statement.setInt(2, enrollmentID);
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        if(resultSet.next()) {
+	            status = resultSet.getString("status");
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return status;
 	}
 	
 }

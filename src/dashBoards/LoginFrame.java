@@ -46,6 +46,7 @@ public class LoginFrame implements ActionListener{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel leftPanel = new JPanel() {
@@ -156,13 +157,12 @@ public class LoginFrame implements ActionListener{
 			if(loginResult == true) {
 				if(verify.getStudentID() == 0) {
 					new EnrollmentForm(verify);
+					frame.dispose();
 				}
 				else {
 					StudentDashBoard studentDashboard = new StudentDashBoard(verify);
 					frame.dispose();
 				}
-				
-				frame.dispose();
 			}
 			else {
 				JOptionPane.showMessageDialog(frame, "LOGIN FAILED");

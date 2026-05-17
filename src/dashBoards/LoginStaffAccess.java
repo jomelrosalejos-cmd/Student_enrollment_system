@@ -88,11 +88,11 @@ public class LoginStaffAccess implements ActionListener{
 		passwordField.setBounds(58, 303, 430, 30);
 		rightPanel.add(passwordField);
 		
-		JLabel noAccLabel = new JLabel("No account yet?");
-		noAccLabel.setForeground(Color.WHITE);
-		noAccLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
-		noAccLabel.setBounds(145, 343, 136, 30);
-		rightPanel.add(noAccLabel);
+//		JLabel noAccLabel = new JLabel("No account yet?");
+//		noAccLabel.setForeground(Color.WHITE);
+//		noAccLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
+//		noAccLabel.setBounds(145, 343, 136, 30);
+//		rightPanel.add(noAccLabel);
 		
 		signInbutton = new JButton("Sign in");
 		signInbutton.setFocusable(false);
@@ -123,18 +123,18 @@ public class LoginStaffAccess implements ActionListener{
 		portalLabel.setBounds(58, 47, 135, 30);
 		rightPanel.add(portalLabel);
 		
-		linkButton = new JButton("Register here");
-		linkButton.setFocusable(false);
-		linkButton.setFont(new Font("Consolas", Font.BOLD, 15));
-		linkButton.setHorizontalAlignment(SwingConstants.LEADING);
-		linkButton.setBorderPainted(false);
-		linkButton.setContentAreaFilled(false);
-		linkButton.setOpaque(false);
-		linkButton.setForeground(new Color(251, 181, 23));
-		linkButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		linkButton.setBounds(260, 344, 149, 30);
-		linkButton.addActionListener(this);
-		rightPanel.add(linkButton);
+//		linkButton = new JButton("Register here");
+//		linkButton.setFocusable(false);
+//		linkButton.setFont(new Font("Consolas", Font.BOLD, 15));
+//		linkButton.setHorizontalAlignment(SwingConstants.LEADING);
+//		linkButton.setBorderPainted(false);
+//		linkButton.setContentAreaFilled(false);
+//		linkButton.setOpaque(false);
+//		linkButton.setForeground(new Color(251, 181, 23));
+//		linkButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//		linkButton.setBounds(260, 344, 149, 30);
+//		linkButton.addActionListener(this);
+//		rightPanel.add(linkButton);
 		
 		frame.setVisible(true);
 		

@@ -102,6 +102,7 @@ public class EnrollmentForm implements ActionListener{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel centerPanel = new JPanel();
@@ -252,7 +253,7 @@ public class EnrollmentForm implements ActionListener{
 		strandLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		strandLabel.setBounds(472, 167, 144, 14);
 		mainForm.add(strandLabel);
-		String[] strands = {"ABM", "STEM", "HUMSS" , "GAS" , "IA" , "ICT"};
+		String[] strands = {"ABM", "STEM", "HUMSS" , "GAS" , "EIM" , "ICT"};
 		comboBox_1 = new JComboBox(strands);
 		comboBox_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		comboBox_1.setBounds(472, 185, 130, 25);
@@ -345,6 +346,7 @@ public class EnrollmentForm implements ActionListener{
 		cancelButton.setBorder(new LineBorder(new Color(48, 46, 127), 2, true));
 		cancelButton.setBackground(Color.WHITE);
 		cancelButton.setBounds(531, 437, 85, 25);
+		cancelButton.addActionListener(this);
 		mainForm.add(cancelButton);
 		
 		//Submit Button
@@ -358,6 +360,17 @@ public class EnrollmentForm implements ActionListener{
 		mainForm.add(submitButton);
 		
 		frame.setVisible(true);
+		JOptionPane.showMessageDialog(frame,
+			    "REMINDERS:\n" +
+			    "• Fill in all required fields\n" +
+			    "• Put N/A if not applicable\n" +
+			    "• LRN must be 12 digits\n" +
+			    "• Upload required documents\n" + 
+			    "(Form 137, Birth Certificate, Good Moral, 2x2 ID Picture)\n" +
+			    "• Make sure your documents are clear and readable\n" +
+			    "• Accepted file formats: JPG, PNG, PDF\n",
+			    "Enrollment Reminders",
+			    JOptionPane.INFORMATION_MESSAGE);
 		
 	}
 
@@ -425,7 +438,7 @@ public class EnrollmentForm implements ActionListener{
 
 	
  	private void uploadForm137() {
-        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Form 137 uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Form 137 uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         form137source = Paths.get(form137fileSource);
@@ -433,8 +446,6 @@ public class EnrollmentForm implements ActionListener{
         
         try {
 			Files.copy(form137source, form137destination, StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("Uploaded to: " + form137destination.toString());
-			
 		}
         catch (IOException exc) {
 			exc.printStackTrace();
@@ -442,7 +453,7 @@ public class EnrollmentForm implements ActionListener{
 	}
 
  	private void uploadBirthCert() {
-        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Birth Certificate uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Birth Certificate uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         birthCertsource = Paths.get(birthCertfileSource);
@@ -450,7 +461,6 @@ public class EnrollmentForm implements ActionListener{
         
         try {
 			Files.copy(birthCertsource, birthCertdestination, StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("Uploaded to: " + birthCertdestination.toString());
 		}
         catch (IOException exc) {
 			exc.printStackTrace();
@@ -458,7 +468,7 @@ public class EnrollmentForm implements ActionListener{
 	}
  	
  	private void uploadIDpic() {
-        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\ID picture uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\ID picture uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         idPicsource = Paths.get(idPicfileSource);
@@ -466,8 +476,6 @@ public class EnrollmentForm implements ActionListener{
         
         try {
 			Files.copy(idPicsource, idPicdestination, StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("Uploaded to: " + idPicdestination.toString());
-			
 		}
         catch (IOException exc) {
 			exc.printStackTrace();
@@ -475,7 +483,7 @@ public class EnrollmentForm implements ActionListener{
 	}
  	
  	private void uploadGoodMoral() {
-        String folderPath = "C:\\Users\\PC\\OneDrive\\Desktop\\Good Moral Uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Good Moral Uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         goodMoralsource = Paths.get(goodMoralfileSource);
@@ -491,7 +499,25 @@ public class EnrollmentForm implements ActionListener{
 		}
 	}
  	
+ 	public boolean isNumber(String phoneNumber) {
+ 	    try {
+ 	        Long.parseLong(phoneNumber);
+ 	        return true;
+ 	    } catch (NumberFormatException e) {
+ 	        return false;
+ 	    }
+ 	}
+ 	
 	private void submitInformation() {
+		
+		if(form137File == null || birthCertFile == null ||
+		   goodMoralFile == null || idPicFile == null) {
+			JOptionPane.showMessageDialog(frame,
+			"Please upload all the requires documents.", "Missing Files", JOptionPane.ERROR_MESSAGE);
+			
+			return;
+		}
+		
 		int strandID = 0;
 		boolean hasError = false;
 		
@@ -515,20 +541,38 @@ public class EnrollmentForm implements ActionListener{
 			case "EIM": strandID = 6; break;
 		}
 		
+		if(isNumber(phonenumber) == false) {
+			JOptionPane.showMessageDialog(frame, "Phone Number must only contain numbers", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		if(isNumber(lrnNumber) == false) {
+			JOptionPane.showMessageDialog(frame, "LRN must only contain numbers", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		if(lastName.isBlank() || firstname.isBlank() || middlename.isBlank() || adrs.isBlank()) {
+			JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		if (lastName.length() > 50) {
-	        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.");
+	        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 	        hasError = true;}
 		else if (firstname.length() > 50) {
-	        JOptionPane.showMessageDialog(frame, "First name is too long. Max 50 characters.");
+	        JOptionPane.showMessageDialog(frame, "First name is too long. Max 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 	        hasError = true;}
 		else if (middlename.length() > 50) {
-	        JOptionPane.showMessageDialog(frame, "Middle name is too long. Max 50 characters.");
+	        JOptionPane.showMessageDialog(frame, "Middle name is too long. Max 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
 	        hasError = true;}
-		else if (phonenumber.length() > 11) {
-	        JOptionPane.showMessageDialog(frame, "Phone number is too long. Max 11 digits.");
+		else if (phonenumber.length() != 11) {
+	        JOptionPane.showMessageDialog(frame, "Phone number should be 11 digits.", "Error", JOptionPane.ERROR_MESSAGE);
 	        hasError = true;}
-		else if (lrnNumber.length() > 12) {
-	        JOptionPane.showMessageDialog(frame, "LRN is too long. Max 12 characters.");
+		else if (database.isLRNalreadyInUse(lrnNumber) == true) {
+			JOptionPane.showMessageDialog(frame, "LRN already in use. Please check your LRN and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+	        hasError = true;
+		}
+		else if (lrnNumber.length() != 12) {
+	        JOptionPane.showMessageDialog(frame, "LRN should be 12 characters long.", "Error", JOptionPane.ERROR_MESSAGE);
 	        hasError = true;}
 		
 		if(hasError == false) {
@@ -536,7 +580,7 @@ public class EnrollmentForm implements ActionListener{
 				bDate = LocalDate.parse(birthdate.getText().trim());
 			}
 			catch(Exception error) {
-				JOptionPane.showMessageDialog(frame, "Wrong date format. Use YYYY-MM-DD");
+				JOptionPane.showMessageDialog(frame, "Wrong date format. Use YYYY-MM-DD", "Error", JOptionPane.ERROR_MESSAGE);
 				hasError = true;
 			}
 		}

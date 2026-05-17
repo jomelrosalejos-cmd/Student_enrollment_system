@@ -44,7 +44,7 @@ public class DatabaseConnection {
 	}
 	
 	public boolean Verify (String usernameInput, String userPasswordInput) {
-		String query = "SELECT * FROM user_accounts WHERE user_name = ? AND password = ?;";	
+		String query = "SELECT * FROM user_accounts WHERE user_name = ? AND password = ? AND role_id = 1;";	
 		boolean successful = false;
 		
 		try {
@@ -343,6 +343,41 @@ public class DatabaseConnection {
 		
 		return status;
 		
+	}
+	
+	public boolean isEmailAlreadyInUse(String email) {
+		String query = "SELECT email FROM user_accounts "
+				+ "WHERE email = ?;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, email);
+			ResultSet resultSet = statement.executeQuery();
+			if(resultSet.next()) {
+				return true;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+				return false;
+	}
+	
+	public boolean isLRNalreadyInUse(String lrn) {
+		String query = "SELECT LRN FROM students WHERE LRN = ?;";
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, lrn);
+			ResultSet resultSet = statement.executeQuery();
+			if(resultSet.next()) {
+				return true;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+				return false;
 	}
 	
 }
