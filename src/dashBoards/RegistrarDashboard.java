@@ -400,7 +400,7 @@ public class RegistrarDashboard implements ActionListener{
 		
 		if(e.getSource() == btnLogOut) {
 			new LoginStaffAccess();
-			System.exit(0);
+			frame.dispose();
 		}
 		
 		if(e.getSource() == updateStudentButton) {

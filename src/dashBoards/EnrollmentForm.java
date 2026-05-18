@@ -438,7 +438,7 @@ public class EnrollmentForm implements ActionListener{
 
 	
  	private void uploadForm137() {
-        String folderPath = System.getProperty("user.home") + "\\Form 137 uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Desktop\\Form 137 uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         form137source = Paths.get(form137fileSource);
@@ -453,7 +453,7 @@ public class EnrollmentForm implements ActionListener{
 	}
 
  	private void uploadBirthCert() {
-        String folderPath = System.getProperty("user.home") + "\\Birth Certificate uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Desktop\\Birth Certificate uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         birthCertsource = Paths.get(birthCertfileSource);
@@ -468,7 +468,7 @@ public class EnrollmentForm implements ActionListener{
 	}
  	
  	private void uploadIDpic() {
-        String folderPath = System.getProperty("user.home") + "\\ID picture uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Desktop\\ID picture uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         idPicsource = Paths.get(idPicfileSource);
@@ -483,7 +483,7 @@ public class EnrollmentForm implements ActionListener{
 	}
  	
  	private void uploadGoodMoral() {
-        String folderPath = System.getProperty("user.home") + "\\Good Moral Uploads\\" + database.getStudentID();
+        String folderPath = System.getProperty("user.home") + "\\Desktop\\Good Moral Uploads\\" + database.getStudentID();
         new File(folderPath).mkdirs();
         
         goodMoralsource = Paths.get(goodMoralfileSource);
@@ -549,6 +549,8 @@ public class EnrollmentForm implements ActionListener{
 			JOptionPane.showMessageDialog(frame, "LRN must only contain numbers", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
+		
+		
 		
 		if(lastName.isBlank() || firstname.isBlank() || middlename.isBlank() || adrs.isBlank()) {
 			JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);

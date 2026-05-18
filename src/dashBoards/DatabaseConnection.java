@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -102,10 +103,13 @@ public class DatabaseConnection {
 		String query = "INSERT INTO enrollments (student_id, school_year) VALUES "
 				+ "(?, ?);";
 		
+		int currentYear = Year.now().getValue();
+		String schoolYear = currentYear + "-" + (currentYear + 1);
+		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setInt(1, getStudentID());
-			statement.setString(2, "2026-2027");
+			statement.setString(2, schoolYear);
 			
 			int rowsInserted = statement.executeUpdate();
 			if (rowsInserted > 0) {
@@ -240,6 +244,24 @@ public class DatabaseConnection {
 		return enrollmentID;
 	}
 	
+	public String getSchoolYear(int enrollmentID) {
+		String studentIDquery = "SELECT * FROM enrollments WHERE enrollment_id = ?;";
+		
+		try {
+			PreparedStatement statement2 = connection.prepareStatement(studentIDquery);
+			statement2.setInt(1, enrollmentID);
+			ResultSet resultSet = statement2.executeQuery();
+			if (resultSet.next()) {
+			    schoolYear = resultSet.getString("school_year");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return schoolYear;
+	}
+	
 	public String getStrand() {
 		String strandName = "";
 		
@@ -277,13 +299,6 @@ public class DatabaseConnection {
 	
 	public String getEnrollmentStatus() {
 		return enrollmentStatus;
-	}
-	
-	public String getSchoolYear() {
-		int year = Integer.parseInt(schoolYear.substring(0, 4));
-		String schoolYear = year + "-" + (year + 1);
-		
-		return schoolYear;
 	}
 	
 	public void getSectionID() {

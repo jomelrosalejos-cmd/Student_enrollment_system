@@ -42,6 +42,7 @@ public class PrincipalDashboard{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel mainPanel = new JPanel();
@@ -91,6 +92,8 @@ public class PrincipalDashboard{
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new LoginStaffAccess();
+				frame.dispose();
 			}
 		});
 		btnLogOut.setOpaque(false);

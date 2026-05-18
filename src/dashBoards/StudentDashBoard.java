@@ -338,7 +338,7 @@ public class StudentDashBoard implements ActionListener {
 		enrollmentStatusLabel.setBounds(348, 11, 161, 23);
 		enrollmentDetailsPanel.add(enrollmentStatusLabel);
 		
-		JLabel schoolYearLabel = new JLabel("School Year: " + database.getSchoolYear());
+		JLabel schoolYearLabel = new JLabel("School Year: " + database.getSchoolYear(database.getEnrollmentID()));
 		schoolYearLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		schoolYearLabel.setBounds(348, 45, 194, 23);
 		enrollmentDetailsPanel.add(schoolYearLabel);

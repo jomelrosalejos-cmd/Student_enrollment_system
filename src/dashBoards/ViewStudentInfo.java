@@ -67,6 +67,7 @@ public class ViewStudentInfo implements ActionListener{
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 384, 477);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel backPanel = new JPanel();
