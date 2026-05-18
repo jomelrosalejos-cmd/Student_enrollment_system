@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,13 +23,33 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
-public class TeacherDashboard {
+public class TeacherDashboard implements ActionListener{
 	
 	Image imageLogo;
 	Image iconImage;
 	
+	JButton searchButton;
+	JButton refreshButton;
+	
+	JTextField searchBarForStudent;
+	JTable table;
+	
+	JLabel headerTitle;
+	JLabel classSizeNumber;
+	
+	ArrayList<Object[]> row;
+	Object[][] data;
+	
+	String[] column = {"Student ID","Name","LRN", "Birthdate", "Gender"};
+	
+	Principal_TeacherDatabaseConnection database;
+	JComboBox schoolYearChooser;
+	
 	public TeacherDashboard(Principal_TeacherDatabaseConnection database) {
+		this.database = database;
+		
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
@@ -37,6 +58,7 @@ public class TeacherDashboard {
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
 		frame.setBounds(100, 100, 832, 580);
+		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
 		JPanel panel = new JPanel();
@@ -112,6 +134,8 @@ public class TeacherDashboard {
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLogOut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new LoginStaffAccess();
+				frame.dispose();
 			}
 		});
 		btnLogOut.setOpaque(false);
@@ -130,13 +154,21 @@ public class TeacherDashboard {
 		mainPanel.setLayout(null);
 		
 		JPanel headerPanel = new JPanel();
-		headerPanel.setBounds(0, 0, 628, 70);
+		headerPanel.setBounds(0, 0, 652, 70);
 		headerPanel.setBackground(new Color(255, 255, 255));
 		headerPanel.setPreferredSize(new Dimension(0, 70));
 		mainPanel.add(headerPanel);
 		headerPanel.setLayout(null);
 		
-		JLabel headerTitle = new JLabel("School Year · 2026–2027");
+		schoolYearChooser = new JComboBox();
+		schoolYearChooser.setBounds(489, 25, 112, 22);
+		ArrayList<String> schoolYears = database.getSchoolYears();
+		for(String year : schoolYears) {
+			schoolYearChooser.addItem(year);
+		}
+		headerPanel.add(schoolYearChooser);
+		
+		headerTitle = new JLabel("School Year · " + schoolYearChooser.getSelectedItem());
 		headerTitle.setForeground(new Color(48, 46, 127));
 		headerTitle.setFont(new Font("Serif", Font.PLAIN, 22));
 		headerTitle.setBounds(45, 11, 468, 48);
@@ -157,7 +189,7 @@ public class TeacherDashboard {
 		JLabel strandAssigned = new JLabel(sectionInfo[1]);
 		strandAssigned.setForeground(new Color(0, 227, 0));
 		strandAssigned.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
-		strandAssigned.setBounds(10, 7, 107, 21);
+		strandAssigned.setBounds(10, 7, 107, 24);
 		strandAssignmentPanel.add(strandAssigned);
 		
 		JLabel strandLabel = new JLabel("Strand");
@@ -173,8 +205,10 @@ public class TeacherDashboard {
 		JLabel classSizeLabel = new JLabel("Class Size");
 		classSizeLabel.setBounds(10, 29, 92, 14);
 		classSizePanel.add(classSizeLabel);
+		
+		String classSize = String.valueOf(database.getClassSize((String) schoolYearChooser.getSelectedItem()));
 	
-		JLabel classSizeNumber = new JLabel(sectionInfo[3]);
+		classSizeNumber = new JLabel(classSize);
 		classSizeNumber.setForeground(new Color(236, 167, 4));
 		classSizeNumber.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		classSizeNumber.setBounds(10, 7, 73, 21);
@@ -196,7 +230,7 @@ public class TeacherDashboard {
 		sectionLabel.setBounds(10, 29, 92, 14);
 		sectionPanel.add(sectionLabel);
 		
-		JTextField searchBarForStudent = new JTextField();
+		searchBarForStudent = new JTextField();
 		searchBarForStudent.setBorder(new LineBorder(new Color(171, 173, 179)));
 		searchBarForStudent.setBounds(22, 196, 188, 20);
 		mainPanel.add(searchBarForStudent);
@@ -206,12 +240,10 @@ public class TeacherDashboard {
 		searchStudentLabel.setBounds(21, 177, 189, 14);
 		mainPanel.add(searchStudentLabel);
 		
-		ArrayList<Object[]> row = database.getStudentsInSection();
-		Object[][] data = row.toArray(new Object[0][]);
+		row = database.getStudentsInSection((String) schoolYearChooser.getSelectedItem());
+		data = row.toArray(new Object[0][]);
 		
-		String[] column = {"Student ID","Name","LRN", "Birthdate", "Gender"};
-		
-		JTable table = new JTable(data, column) {
+		table = new JTable(data, column) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -224,6 +256,45 @@ public class TeacherDashboard {
 		scrollPane_studentList.setBounds(22, 233, 584, 277);
 		mainPanel.add(scrollPane_studentList);
 		
+		refreshButton = new JButton("Refresh");
+		refreshButton.setBounds(517, 195, 89, 23);
+		refreshButton.setFocusable(false);
+		refreshButton.addActionListener(this);
+		mainPanel.add(refreshButton);
+		
+		searchButton = new JButton("Search");
+		searchButton.setBounds(209, 195, 89, 23);
+		searchButton.addActionListener(this);
+		mainPanel.add(searchButton);
+		
 		frame.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == refreshButton) {
+			String classSize = String.valueOf(database.getClassSize((String) schoolYearChooser.getSelectedItem()));
+			classSizeNumber.setText(classSize);
+			
+			headerTitle.setText("School Year · " + (String) schoolYearChooser.getSelectedItem());
+			
+			row = database.getStudentsInSection((String) schoolYearChooser.getSelectedItem());
+			data = row.toArray(new Object[0][]);
+			table.setModel(new DefaultTableModel(data, column));
+		}
+		if(e.getSource() == searchButton) {
+			try {
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
+				
+				int value = Integer.parseInt(searchBarForStudent.getText().trim());
+				row = database.searchStudent(value, selectedYear);
+				data = row.toArray(new Object[0][]);
+				table.setModel(new DefaultTableModel(data, column));
+			}
+			catch(NumberFormatException n) {
+				System.out.println("INVALID STUDENT ID!");
+			}
+		}
+		
 	}
 }

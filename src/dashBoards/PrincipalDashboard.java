@@ -9,9 +9,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,9 +22,10 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.table.DefaultTableModel;
 
 
-public class PrincipalDashboard {
+public class PrincipalDashboard{
 	
 	Image imageLogo;
 	Image iconImage;
@@ -142,6 +145,15 @@ public class PrincipalDashboard {
 		overviewTitleLabel.setBounds(45, 11, 468, 48);
 		topBarPanel.add(overviewTitleLabel);
 		
+		JComboBox dateChooser = new JComboBox();
+		dateChooser.setBounds(506, 25, 112, 22);
+		ArrayList<String> schoolYears = database.getSchoolYears();
+		for(String year : schoolYears) {
+		    dateChooser.addItem(year);
+		}
+		String selectedYear = String.valueOf(dateChooser.getSelectedItem());
+		topBarPanel.add(dateChooser);
+		
 		JLabel overviewIconLabel = new JLabel("📋");
 		overviewIconLabel.setForeground(new Color(48, 46, 127));
 		overviewIconLabel.setBounds(12, 21, 23, 29);
@@ -158,8 +170,13 @@ public class PrincipalDashboard {
 		String strTotalTeacher = String.valueOf(totalTeacher);
 		
 		String[] column = {"Strand", "Total Students"};
-		int[] totalPerStrand = {database.getTotalABMstudents(), database.getTotalGASstudents(), database.getTotalHUMSSstudents(),
-				database.getTotalICTstudents(), database.getTotalSTEMstudents(), database.getTotalEIMstudents()};
+		int[] totalPerStrand = {
+				database.getTotalByStrandAndSchoolYear(1, selectedYear),
+				database.getTotalByStrandAndSchoolYear(2, selectedYear),
+				database.getTotalByStrandAndSchoolYear(3, selectedYear),
+				database.getTotalByStrandAndSchoolYear(4, selectedYear),
+				database.getTotalByStrandAndSchoolYear(5, selectedYear),
+				database.getTotalByStrandAndSchoolYear(6, selectedYear)};
 		Object[][] data = {
 				{"ABM", totalPerStrand[0]},
 				{"GAS", totalPerStrand[1]},
@@ -169,7 +186,7 @@ public class PrincipalDashboard {
 				{"EIM", totalPerStrand[5]}
 				};
 		
-		BarChart chart = new BarChart(totalPerStrand, database.getTotalStudents());
+		BarChart chart = new BarChart(totalPerStrand, database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()));
 		chart.setBackground(Color.white);
 		chart.setBounds(22, 211, 340, 300);
 		chart.setLayout(null);
@@ -189,49 +206,49 @@ public class PrincipalDashboard {
 		strandTableScrollPane.setBounds(393, 211, 200, 119);
 		contentPanel.add(strandTableScrollPane);
 		
+		String ABMPercentage = String.format("%.2f", 
+		(double) database.getTotalByStrandAndSchoolYear(1, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
+		JLabel chartLabelABM = new JLabel("ABM: " + ABMPercentage + "%");
+		chartLabelABM.setBounds(20, 35, 109, 14);
+		chart.add(chartLabelABM);
+		
 		String GASPercentage = String.format("%.2f", 
-		(double) database.getTotalGASstudents() / (double) database.getTotalStudents() * 100.0 );
+		(double) database.getTotalByStrandAndSchoolYear(2, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
 		JLabel chartLabelGAS = new JLabel("GAS: " + GASPercentage+ "%");
 		chartLabelGAS.setBounds(20, 75, 109, 14);
 		chart.add(chartLabelGAS);
 		
 		String HUMSSPercentage = String.format("%.2f", 
-		(double) database.getTotalHUMSSstudents() / (double) database.getTotalStudents() * 100.0 );
+		(double) database.getTotalByStrandAndSchoolYear(3, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
 		JLabel chartLabelHUMMS = new JLabel("HUMSS: " + HUMSSPercentage + "%");
 		chartLabelHUMMS.setBounds(20, 115, 109, 14);
 		chart.add(chartLabelHUMMS);
 		
 		String ICTPercentage = String.format("%.2f", 
-		(double) database.getTotalICTstudents() / (double) database.getTotalStudents() * 100.0 );
+		(double) database.getTotalByStrandAndSchoolYear(4, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
 		JLabel chartLabelICT = new JLabel("ICT: " + ICTPercentage + "%");
 		chartLabelICT.setBounds(20, 155, 109, 14);
 		chart.add(chartLabelICT);
 		
 		String STEMPercentage = String.format("%.2f", 
-		(double) database.getTotalSTEMstudents() / (double) database.getTotalStudents() * 100.0 );
+		(double) database.getTotalByStrandAndSchoolYear(5, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
 		JLabel chartLabelSTEM = new JLabel("STEM: " + STEMPercentage + "%");
 		chartLabelSTEM.setBounds(20, 196, 109, 14);
 		chart.add(chartLabelSTEM);
 		
 		String EIMPercentage = String.format("%.2f", 
-		(double) database.getTotalEIMstudents() / (double) database.getTotalStudents() * 100.0 );
+		(double) database.getTotalByStrandAndSchoolYear(6, selectedYear) / (double) database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem()) * 100.0 );
 		JLabel chartLabelEIM = new JLabel("EIM: " + EIMPercentage + "%");
 		chartLabelEIM.setBounds(20, 236, 109, 14);
 		chart.add(chartLabelEIM);
-		
-		String ABMPercentage = String.format("%.2f", 
-		(double) database.getTotalABMstudents() / (double) database.getTotalStudents() * 100.0 );
-		JLabel chartLabelABM = new JLabel("ABM: " + ABMPercentage + "%");
-		chartLabelABM.setBounds(20, 35, 109, 14);
-		chart.add(chartLabelABM);
-		
+
 		JPanel totalStudentsCard = new JPanel();
 		totalStudentsCard.setLayout(null);
 		totalStudentsCard.setBackground(Color.WHITE);
 		totalStudentsCard.setBounds(22, 81, 176, 52);
 		contentPanel.add(totalStudentsCard);
 		
-		JLabel totalStudentsValueLabel = new JLabel(String.valueOf(database.getTotalStudents()));
+		JLabel totalStudentsValueLabel = new JLabel(String.valueOf(database.getTotalStudentsBySchoolYear((String) dateChooser.getSelectedItem())));
 		totalStudentsValueLabel.setForeground(new Color(0, 227, 0));
 		totalStudentsValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		totalStudentsValueLabel.setBounds(10, 7, 73, 21);
@@ -279,7 +296,7 @@ public class PrincipalDashboard {
 		schoolYearCard.setBounds(22, 139, 176, 52);
 		contentPanel.add(schoolYearCard);
 		
-		JLabel schoolYearValueLabel = new JLabel(database.getSchoolYear());
+		JLabel schoolYearValueLabel = new JLabel((String) dateChooser.getSelectedItem());
 		schoolYearValueLabel.setForeground(new Color(255, 128, 128));
 		schoolYearValueLabel.setFont(new Font("Segoe UI Symbol", Font.BOLD, 18));
 		schoolYearValueLabel.setBounds(10, 7, 140, 21);
@@ -288,6 +305,58 @@ public class PrincipalDashboard {
 		JLabel schoolYearTitleLabel = new JLabel("School Year");
 		schoolYearTitleLabel.setBounds(10, 29, 92, 14);
 		schoolYearCard.add(schoolYearTitleLabel);
+		
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.setBounds(517, 488, 89, 23);
+		refreshButton.setFocusable(false);
+		refreshButton.addActionListener(e -> {
+		    String selected = (String) dateChooser.getSelectedItem();
+		    
+		    // Update Total Students
+		    totalStudentsValueLabel.setText(String.valueOf(
+		        database.getTotalStudentsBySchoolYear(selected)));
+		    
+		    // Update School Year card
+		    schoolYearValueLabel.setText(selected);
+		    
+		    // Update strand totals
+		    int[] updatedTotals = {
+		        database.getTotalByStrandAndSchoolYear(1, selected),
+		        database.getTotalByStrandAndSchoolYear(2, selected),
+		        database.getTotalByStrandAndSchoolYear(3, selected),
+		        database.getTotalByStrandAndSchoolYear(4, selected),
+		        database.getTotalByStrandAndSchoolYear(5, selected),
+		        database.getTotalByStrandAndSchoolYear(6, selected)
+		    };
+		    
+		    int total = database.getTotalStudentsBySchoolYear(selected);
+		    
+		    // Update percentage labels
+		    chartLabelABM.setText("ABM: " + String.format("%.2f", (double)updatedTotals[0]/total*100) + "%");
+		    chartLabelGAS.setText("GAS: " + String.format("%.2f", (double)updatedTotals[1]/total*100) + "%");
+		    chartLabelHUMMS.setText("HUMSS: " + String.format("%.2f", (double)updatedTotals[2]/total*100) + "%");
+		    chartLabelICT.setText("ICT: " + String.format("%.2f", (double)updatedTotals[3]/total*100) + "%");
+		    chartLabelSTEM.setText("STEM: " + String.format("%.2f", (double)updatedTotals[4]/total*100) + "%");
+		    chartLabelEIM.setText("EIM: " + String.format("%.2f", (double)updatedTotals[5]/total*100) + "%");
+
+		    // Update table
+		    Object[][] updatedData = {
+		        {"ABM", updatedTotals[0]},
+		        {"GAS", updatedTotals[1]},
+		        {"HUMSS", updatedTotals[2]},
+		        {"ICT", updatedTotals[3]},
+		        {"STEM", updatedTotals[4]},
+		        {"EIM", updatedTotals[5]}
+		    };
+		    strandTable.setModel(new DefaultTableModel(updatedData, column));
+		    strandTable.getTableHeader().setBackground(new Color(48, 46, 127));
+		    strandTable.getTableHeader().setForeground(new Color(251, 181, 23));
+		    
+		    // Repaint chart
+		    chart.updateData(updatedTotals, total);
+		    chart.repaint();
+		});
+		contentPanel.add(refreshButton);
 		
 		frame.setVisible(true);
 		

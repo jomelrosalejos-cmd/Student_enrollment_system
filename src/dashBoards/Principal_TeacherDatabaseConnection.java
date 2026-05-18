@@ -54,28 +54,26 @@ public class Principal_TeacherDatabaseConnection {
 		return roleID;
 	}
 	
-	public String getSchoolYear() {
-		int currentYear = java.time.LocalDate.now().getYear();
-		String schoolYear = currentYear + "-" + (currentYear + 1);
-		return schoolYear;
+	public ArrayList<String> getSchoolYears() {
+	    ArrayList<String> schoolYears = new ArrayList<>();
+	    String query = "SELECT DISTINCT school_year FROM enrollments ORDER BY school_year DESC;";
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        ResultSet resultSet = statement.executeQuery();
+	        while(resultSet.next()) schoolYears.add(resultSet.getString("school_year"));
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return schoolYears;
 	}
 	
-	public int getTotalStudents() {
-		String query = "SELECT COUNT(*) AS totalStudents  FROM enrollments WHERE status = 'ENROLLED';";
-		int totalStudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalStudents = resultStudentID.getInt("totalStudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalStudents;
+	public int getTotalStudentsBySchoolYear(String schoolYear) {
+	    String query = "SELECT COUNT(*) FROM enrollments WHERE school_year = ?;";
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, schoolYear);
+	        ResultSet resultSet = statement.executeQuery();
+	        if(resultSet.next()) return resultSet.getInt(1);
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return 0;
 	}
 	
 	public int getTotalSections() {
@@ -114,128 +112,30 @@ public class Principal_TeacherDatabaseConnection {
 		return totalTeachers;
 	}
 	
-	public int getTotalABMstudents() {
-		String query = "SELECT COUNT(*) AS totalABMstudents FROM students INNER JOIN enrollments ON students.student_id = enrollments.enrollment_id WHERE strand_id = 1 AND status = 'ENROLLED';";
-		int totalABMstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalABMstudents = resultStudentID.getInt("totalABMstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalABMstudents;
+	public int getTotalByStrandAndSchoolYear(int strandID, String schoolYear) {
+	    String query = "SELECT COUNT(*) FROM students s " +
+	                   "INNER JOIN enrollments e ON s.student_id = e.student_id " +
+	                   "WHERE s.strand_id = ? AND e.school_year = ?;";
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, strandID);
+	        statement.setString(2, schoolYear);
+	        ResultSet resultSet = statement.executeQuery();
+	        if(resultSet.next()) return resultSet.getInt(1);
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return 0;
 	}
 	
-	public int getTotalGASstudents() {
-		String query = "SELECT COUNT(*) AS totalGASstudents FROM students INNER JOIN enrollments"
-				+ " ON students.student_id = enrollments.enrollment_id WHERE strand_id = 2 AND status = 'ENROLLED';";
-		int totalGASstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalGASstudents = resultStudentID.getInt("totalGASstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalGASstudents;
-	}
-	
-	public int getTotalHUMSSstudents() {
-		String query = "SELECT COUNT(*) AS totalHUMSSstudents FROM students INNER"
-				+ " JOIN enrollments ON students.student_id = enrollments.enrollment_id WHERE strand_id = 3 AND status = 'ENROLLED';";
-		int totalHUMSSstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalHUMSSstudents = resultStudentID.getInt("totalHUMSSstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalHUMSSstudents;
-	}
-	
-	public int getTotalICTstudents() {
-		String query = "SELECT COUNT(*) AS totalICTstudents FROM students INNER JOIN enrollments ON "
-				+ "students.student_id = enrollments.enrollment_id WHERE strand_id = 4 AND status = 'ENROLLED';";
-		int totalICTstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalICTstudents = resultStudentID.getInt("totalICTstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalICTstudents;
-	}
-	
-	public int getTotalSTEMstudents() {
-		String query = "SELECT COUNT(*) AS totalSTEMstudents FROM students INNER JOIN enrollments ON "
-				+ "students.student_id = enrollments.enrollment_id WHERE strand_id = 5 AND status = 'ENROLLED';";
-		int totalSTEMstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalSTEMstudents = resultStudentID.getInt("totalSTEMstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalSTEMstudents;
-	}
-	
-	public int getTotalEIMstudents() {
-		String query = "SELECT COUNT(*) AS totalEIMstudents FROM students INNER JOIN enrollments ON "
-				+ "students.student_id = enrollments.enrollment_id WHERE strand_id = 6 AND status = 'ENROLLED';";
-		int totalEIMstudents = 0;
-		
-		try {
-			PreparedStatement statement2 = connection.prepareStatement(query);
-			ResultSet resultStudentID = statement2.executeQuery();
-			if (resultStudentID.next()) {
-				totalEIMstudents = resultStudentID.getInt("totalEIMstudents");
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return totalEIMstudents;
-	}
-	
-	public ArrayList<Object[]> getStudentsInSection() {
+	public ArrayList<Object[]> getStudentsInSection(String selectedYear) {
 		String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender "
 				+ "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
-				+ "WHERE section_id = ?;";
+				+ "WHERE section_id = ? AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setInt(1, getSectionIDByTeacher());
+			statement.setString(2, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
@@ -281,7 +181,7 @@ public class Principal_TeacherDatabaseConnection {
 	                   "INNER JOIN teachers ON sections.teacher_id = teachers.teacher_id " +
 	                   "WHERE sections.section_id = ?";
 	    
-	    String[] info = new String[4];
+	    String[] info = new String[3];
 	    
 	    try {
 	        PreparedStatement stmt = connection.prepareStatement(query);
@@ -293,7 +193,6 @@ public class Principal_TeacherDatabaseConnection {
 	            info[1] = rs.getString("strand_name");
 	            info[2] = rs.getString("first_name") + " " + 
 	            		  rs.getString("last_name");
-	            info[3] = String.valueOf(getClassSize());
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -301,13 +200,14 @@ public class Principal_TeacherDatabaseConnection {
 	    return info;
 	}
 	
-	public int getClassSize() {
+	public int getClassSize(String selectedYear) {
 	    String query = "SELECT COUNT(*) AS classSize FROM enrollments " +
-	                   "WHERE section_id = ? AND status = 'ENROLLED'";
+	                   "WHERE section_id = ? AND status = 'ENROLLED' AND school_year = ?;";
 	    try {
-	        PreparedStatement stmt = connection.prepareStatement(query);
-	        stmt.setInt(1, getSectionIDByTeacher());
-	        ResultSet rs = stmt.executeQuery();
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, getSectionIDByTeacher());
+	        statement.setString(2, selectedYear);
+	        ResultSet rs = statement.executeQuery();
 	        if (rs.next()) {
 	            return rs.getInt("classSize");
 	        }
@@ -315,6 +215,38 @@ public class Principal_TeacherDatabaseConnection {
 	        e.printStackTrace();
 	    }
 	    return 0;
+	}
+	
+	public ArrayList<Object[]> searchStudent(int student_id, String selectedYear) {
+	    String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender " +
+	                   "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id " +
+	                   "WHERE students.student_id = ? AND school_year = ? AND section_id = ?;";
+	    ArrayList<Object[]> List = new ArrayList<>();
+
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, student_id);
+	        statement.setString(2, selectedYear);
+	        statement.setInt(3, getSectionIDByTeacher());
+	        ResultSet resultSet = statement.executeQuery();
+
+	        if(resultSet.next()) {
+	            Object[] row = {
+	                resultSet.getInt("student_id"),
+	                resultSet.getString("last_name") + ", " + 
+	                resultSet.getString("first_name") + " " + 
+	                resultSet.getString("middle_name"),
+	                resultSet.getString("LRN"),
+	                resultSet.getString("birthdate"),
+	                resultSet.getString("gender")
+	            };
+	            List.add(row);
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return List;
 	}
 	
 }

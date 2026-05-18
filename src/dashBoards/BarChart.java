@@ -57,4 +57,9 @@ public class BarChart extends JPanel {
         }
        
     }
+	
+	public void updateData(int[] newData, int newTotal) {
+	    this.strands = newData;
+	    this.totalStudents = newTotal;
+	}
 }
