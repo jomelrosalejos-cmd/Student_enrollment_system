@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,6 +33,8 @@ public class LoginStaffAccess implements ActionListener{
 	
 	JButton signInbutton;
 	JButton linkButton;
+	
+	private JCheckBox showPassword;
 	
 	public LoginStaffAccess(){
 		
@@ -87,6 +90,7 @@ public class LoginStaffAccess implements ActionListener{
 		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(58, 303, 430, 30);
+		passwordField.setFont(new Font("Consolas", Font.PLAIN, 17));
 		rightPanel.add(passwordField);
 		
 //		JLabel noAccLabel = new JLabel("No account yet?");
@@ -137,6 +141,15 @@ public class LoginStaffAccess implements ActionListener{
 //		linkButton.addActionListener(this);
 //		rightPanel.add(linkButton);
 		
+		showPassword = new JCheckBox("  Show Password");
+		showPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		showPassword.setForeground(new Color(255, 255, 255));
+		showPassword.setBackground(new Color(48, 46, 127));
+		showPassword.setBounds(58, 340, 136, 23);
+		showPassword.addActionListener(this);
+		showPassword.setFocusable(false);
+		rightPanel.add(showPassword);
+		
 		frame.setVisible(true);
 		
 	}
@@ -175,9 +188,16 @@ public class LoginStaffAccess implements ActionListener{
 			
 		}
 		
-		else if(e.getSource() == linkButton) {
+		if(e.getSource() == linkButton) {
 			new CreateAnAccount();
 			frame.dispose();
+		}
+		
+		if(showPassword.isSelected()) {
+			passwordField.setEchoChar((char) 0); 
+		}
+		if(!showPassword.isSelected()) {
+			passwordField.setEchoChar('•'); 
 		}
 		
 	}

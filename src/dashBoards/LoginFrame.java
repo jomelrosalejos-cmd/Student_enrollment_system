@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,6 +36,8 @@ public class LoginFrame implements ActionListener{
 	
 	JButton signInbutton;
 	JButton linkButton;
+	
+	private JCheckBox showPassword;
 	
 	public LoginFrame(){
 		
@@ -90,12 +93,13 @@ public class LoginFrame implements ActionListener{
 		
 		passwordField = new JPasswordField();
 		passwordField.setBounds(58, 303, 430, 30);
+		passwordField.setFont(new Font("Consolas", Font.PLAIN, 17));
 		rightPanel.add(passwordField);
 		
 		JLabel noAccLabel = new JLabel("No account yet?");
 		noAccLabel.setForeground(Color.WHITE);
 		noAccLabel.setFont(new Font("Consolas", Font.PLAIN, 15));
-		noAccLabel.setBounds(145, 343, 136, 30);
+		noAccLabel.setBounds(145, 370, 136, 30);
 		rightPanel.add(noAccLabel);
 		
 		signInbutton = new JButton("Sign in");
@@ -105,7 +109,7 @@ public class LoginFrame implements ActionListener{
 		signInbutton.setBackground(new Color(251, 181, 23));
 		signInbutton.setFont(new Font("Georgia", Font.PLAIN, 22));
 		signInbutton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		signInbutton.setBounds(58, 396, 430, 41);
+		signInbutton.setBounds(58, 411, 430, 41);
 		signInbutton.addActionListener(this);
 		rightPanel.add(signInbutton);
 		
@@ -136,9 +140,18 @@ public class LoginFrame implements ActionListener{
 		linkButton.setOpaque(false);
 		linkButton.setForeground(new Color(251, 181, 23));
 		linkButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		linkButton.setBounds(260, 344, 149, 30);
+		linkButton.setBounds(260, 370, 149, 30);
 		linkButton.addActionListener(this);
 		rightPanel.add(linkButton);
+		
+		showPassword = new JCheckBox("  Show Password");
+		showPassword.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		showPassword.setForeground(new Color(255, 255, 255));
+		showPassword.setBackground(new Color(48, 46, 127));
+		showPassword.setBounds(58, 340, 136, 23);
+		showPassword.addActionListener(this);
+		showPassword.setFocusable(false);
+		rightPanel.add(showPassword);
 		
 		frame.setVisible(true);
 		
@@ -167,13 +180,17 @@ public class LoginFrame implements ActionListener{
 			else {
 				JOptionPane.showMessageDialog(frame, "LOGIN FAILED");
 			}
-			
-			
 		}
 		
 		else if(e.getSource() == linkButton) {
 			new CreateAnAccount();
 			frame.dispose();
+		}
+		if(showPassword.isSelected()) {
+			passwordField.setEchoChar((char) 0); 
+		}
+		if(!showPassword.isSelected()) {
+			passwordField.setEchoChar('•'); 
 		}
 		
 	}

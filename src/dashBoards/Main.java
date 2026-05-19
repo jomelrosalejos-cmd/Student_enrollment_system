@@ -10,12 +10,13 @@ public class Main {
 		//new StudentDashBoard();
 		//new TeacherDashboard();
 		//new PrincipalDashboard();
-		new RegistrarDashboard();
+		//new RegistrarDashboard();
 		//new SQLConnection();
 		//new ViewStudentInfo();
 		//new EditStudentInfo();
 		
-		//new LoginStaffAccess();
+		new LoginStaffAccess();
+		
 		
 	}
 }

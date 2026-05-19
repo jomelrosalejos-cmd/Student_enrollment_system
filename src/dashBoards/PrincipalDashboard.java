@@ -25,10 +25,17 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
 
-public class PrincipalDashboard{
+public class PrincipalDashboard implements ActionListener{
 	
 	Image imageLogo;
 	Image iconImage;
+	
+	JFrame frame;
+	JButton viewSectionsButton;
+	
+	JButton btnLogOut;
+	
+	JComboBox dateChooser;
 	
 	Principal_TeacherDatabaseConnection database = new Principal_TeacherDatabaseConnection();
 	
@@ -37,7 +44,7 @@ public class PrincipalDashboard{
 		imageLogo = new ImageIcon(getClass().getResource("/images/yobhelBanner.jpg")).getImage();
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
-		JFrame frame = new JFrame("Student Dashboard");
+		frame = new JFrame("Student Dashboard");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
@@ -88,14 +95,9 @@ public class PrincipalDashboard{
 		dashboardTitleLabel.setBounds(34, 20, 167, 28);
 		dashboardTitlePanel.add(dashboardTitleLabel);
 		
-		JButton btnLogOut = new JButton("🚪  Log Out");
+		btnLogOut = new JButton("🚪  Log Out");
 		btnLogOut.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new LoginStaffAccess();
-				frame.dispose();
-			}
-		});
+		btnLogOut.addActionListener(this);
 		btnLogOut.setOpaque(false);
 		btnLogOut.setHorizontalAlignment(SwingConstants.LEADING);
 		btnLogOut.setForeground(new Color(255, 255, 255));
@@ -148,7 +150,7 @@ public class PrincipalDashboard{
 		overviewTitleLabel.setBounds(45, 11, 468, 48);
 		topBarPanel.add(overviewTitleLabel);
 		
-		JComboBox dateChooser = new JComboBox();
+		dateChooser = new JComboBox();
 		dateChooser.setBounds(506, 25, 112, 22);
 		ArrayList<String> schoolYears = database.getSchoolYears();
 		for(String year : schoolYears) {
@@ -361,7 +363,26 @@ public class PrincipalDashboard{
 		});
 		contentPanel.add(refreshButton);
 		
+		viewSectionsButton = new JButton("View Sections");
+		viewSectionsButton.setBounds(393, 488, 120, 23);
+		viewSectionsButton.setFocusable(false);
+		viewSectionsButton.addActionListener(this);
+		contentPanel.add(viewSectionsButton);
+		
 		frame.setVisible(true);
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == btnLogOut) {
+			new LoginStaffAccess();
+			frame.dispose();
+		}
+		if(e.getSource() == viewSectionsButton) {
+			String selected = (String) dateChooser.getSelectedItem();
+			new ViewSections(selected, database);
+		}
 		
 	}
 

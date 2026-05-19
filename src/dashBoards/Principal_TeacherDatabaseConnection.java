@@ -127,33 +127,44 @@ public class Principal_TeacherDatabaseConnection {
 	}
 	
 	public ArrayList<Object[]> getStudentsInSection(String selectedYear) {
-		String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender "
-				+ "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
-				+ "WHERE section_id = ? AND school_year = ?;";
-		ArrayList<Object[]> List = new ArrayList<>();
-		
-		try {
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setInt(1, getSectionIDByTeacher());
-			statement.setString(2, selectedYear);
-			ResultSet resultSet = statement.executeQuery();
+	    String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender, "
+	            + "phone_number, house_number, street, barangay, municipality, province, email "
+	            + "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+	            + "INNER JOIN user_accounts ON students.user_id = user_accounts.user_id "
+	            + "WHERE section_id = ? AND school_year = ?;";
+	    ArrayList<Object[]> List = new ArrayList<>();
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, getSectionIDByTeacher());
+	        statement.setString(2, selectedYear);
+	        ResultSet resultSet = statement.executeQuery();
 
-			while(resultSet.next()) {
-			    Object[] row = {
-			        resultSet.getInt("student_id"),
-			        resultSet.getString("last_name") + ", " 
-			        + resultSet.getString("first_name") +" "+ resultSet.getString("middle_name"),
-			        resultSet.getString("LRN"),
-			        resultSet.getString("birthdate"),
-			        resultSet.getString("gender"),
-			    };
-			    List.add(row);
-			}
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return List;
+	        while(resultSet.next()) {
+	            String address = resultSet.getString("house_number") + " "
+	                    + resultSet.getString("street") + " st., BRGY."
+	                    + resultSet.getString("barangay") + ", "
+	                    + resultSet.getString("municipality") + ", "
+	                    + resultSet.getString("province");
+	            
+	            Object[] row = {
+	                resultSet.getInt("student_id"),
+	                resultSet.getString("last_name") + ", " 
+	                + resultSet.getString("first_name") + " " + resultSet.getString("middle_name"),
+	                resultSet.getString("LRN"),
+	                resultSet.getString("birthdate"),
+	                resultSet.getString("gender"),
+	                resultSet.getString("phone_number"),
+	                resultSet.getString("email"),
+	                address
+	            };
+	            List.add(row);
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return List;
 	}
 	
 	public int getSectionIDByTeacher() {
@@ -218,9 +229,11 @@ public class Principal_TeacherDatabaseConnection {
 	}
 	
 	public ArrayList<Object[]> searchStudent(int student_id, String selectedYear) {
-	    String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender " +
-	                   "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id " +
-	                   "WHERE students.student_id = ? AND school_year = ? AND section_id = ?;";
+	    String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender, "
+	            + "phone_number, house_number, street, barangay, municipality, province, email "
+	            + "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+	            + "INNER JOIN user_accounts ON students.user_id = user_accounts.user_id "
+	            + "WHERE students.student_id = ? AND school_year = ? AND section_id = ?;";
 	    ArrayList<Object[]> List = new ArrayList<>();
 
 	    try {
@@ -231,14 +244,23 @@ public class Principal_TeacherDatabaseConnection {
 	        ResultSet resultSet = statement.executeQuery();
 
 	        if(resultSet.next()) {
+	            String address = resultSet.getString("house_number") + " "
+	                    + resultSet.getString("street") + " st., BRGY."
+	                    + resultSet.getString("barangay") + ", "
+	                    + resultSet.getString("municipality") + ", "
+	                    + resultSet.getString("province");
+
 	            Object[] row = {
 	                resultSet.getInt("student_id"),
-	                resultSet.getString("last_name") + ", " + 
-	                resultSet.getString("first_name") + " " + 
+	                resultSet.getString("last_name") + ", " +
+	                resultSet.getString("first_name") + " " +
 	                resultSet.getString("middle_name"),
 	                resultSet.getString("LRN"),
 	                resultSet.getString("birthdate"),
-	                resultSet.getString("gender")
+	                resultSet.getString("gender"),
+	                resultSet.getString("phone_number"),
+	                resultSet.getString("email"),
+	                address
 	            };
 	            List.add(row);
 	        }
@@ -247,6 +269,37 @@ public class Principal_TeacherDatabaseConnection {
 	        e.printStackTrace();
 	    }
 	    return List;
+	}
+	
+	public ArrayList<Object[]> getSectionsPerStrand(String schoolYear) {
+	    ArrayList<Object[]> list = new ArrayList<>();
+	    String query = "SELECT strands.strand_name, sections.section_name, " +
+	                   "CONCAT(teachers.first_name, ' ', teachers.last_name) AS teacher_name, " +
+	                   "COUNT(enrollments.student_id) AS total_students " +
+	                   "FROM sections " +
+	                   "INNER JOIN strands ON sections.strand_id = strands.strand_id " +
+	                   "INNER JOIN teachers ON sections.teacher_id = teachers.teacher_id " +
+	                   "LEFT JOIN enrollments ON sections.section_id = enrollments.section_id " +
+	                   "AND enrollments.school_year = ? " +
+	                   "GROUP BY sections.section_id " +
+	                   "ORDER BY strands.strand_name;";
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, schoolYear);
+	        ResultSet resultSet = statement.executeQuery();
+	        while(resultSet.next()) {
+	            Object[] row = {
+	                resultSet.getString("strand_name"),
+	                resultSet.getString("section_name"),
+	                resultSet.getString("teacher_name"),
+	                resultSet.getInt("total_students")
+	            };
+	            list.add(row);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return list;
 	}
 	
 }

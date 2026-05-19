@@ -260,20 +260,23 @@ public class RegistrarDashboard implements ActionListener{
 		contentPanel.add(studentSearchField);
 		studentSearchField.setColumns(10);
 		
-		studentTable = new JTable(data, column) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};	
+		DefaultTableModel model = new DefaultTableModel(data, column);
+		studentTable = new JTable(model) {
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		studentTable.getTableHeader().setBackground(new Color(48, 46, 127));
 		studentTable.getTableHeader().setForeground(Color.white);
 		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
 		setTableColumnSize();
-		
+
 		JScrollPane studentTableScrollPane = new JScrollPane(studentTable);
 		studentTableScrollPane.setBounds(22, 233, 584, 255);
+		studentTableScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		studentTableScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); // ← always show
+		studentTableScrollPane.setBorder(null);
 		contentPanel.add(studentTableScrollPane);
 		
 		filterPendingButton = new JButton("Pending");
@@ -423,11 +426,11 @@ public class RegistrarDashboard implements ActionListener{
 		studentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		columnModel.getColumn(0).setPreferredWidth(65);
-		columnModel.getColumn(1).setPreferredWidth(201);
+		columnModel.getColumn(1).setPreferredWidth(180);
 		columnModel.getColumn(2).setPreferredWidth(95);
 		columnModel.getColumn(3).setPreferredWidth(80);
 		columnModel.getColumn(4).setPreferredWidth(70);
-		columnModel.getColumn(5).setPreferredWidth(70);
+		columnModel.getColumn(5).setPreferredWidth(77);
 	}
 	
 }

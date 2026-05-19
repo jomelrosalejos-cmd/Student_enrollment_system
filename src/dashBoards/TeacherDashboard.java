@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public class TeacherDashboard implements ActionListener{
 	
@@ -42,7 +43,7 @@ public class TeacherDashboard implements ActionListener{
 	ArrayList<Object[]> row;
 	Object[][] data;
 	
-	String[] column = {"Student ID","Name","LRN", "Birthdate", "Gender"};
+	String[] column = {"Student ID", "Name", "LRN", "Birthdate", "Gender", "Phone Number", "Email", "Address"};
 	
 	Principal_TeacherDatabaseConnection database;
 	JComboBox schoolYearChooser;
@@ -251,8 +252,11 @@ public class TeacherDashboard implements ActionListener{
 		};
 		table.getTableHeader().setBackground(new Color(48, 46, 127));
 		table.getTableHeader().setForeground(Color.white);
-		
-		JScrollPane scrollPane_studentList = new JScrollPane(table);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+		JScrollPane scrollPane_studentList = new JScrollPane(table,
+		JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane_studentList.setBounds(22, 233, 584, 277);
 		mainPanel.add(scrollPane_studentList);
 		
