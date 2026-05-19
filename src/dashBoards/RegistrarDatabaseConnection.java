@@ -169,12 +169,14 @@ public class RegistrarDatabaseConnection {
 	}
 	
 	public Object[] getStudentInformation(int student_id) {
-		String query = "SELECT student_id, last_name, first_name, middle_name,"
-				+ "LRN, birthdate, gender, phone_number, address, email, user_accounts.user_id, user_name, password "
-				+ "FROM students INNER JOIN user_accounts "
-				+ "ON students.user_id = user_accounts.user_id "
-				+ "WHERE students.student_id = ?;";
-		Object[] studentData = new Object[14];
+		String query = "SELECT student_id, last_name, first_name, middle_name, suffix, "
+	            + "LRN, birthdate, gender, house_number, street, barangay, municipality, "
+	            + "province, phone_number, email, user_accounts.user_id, user_name, password "
+	            + "FROM students INNER JOIN user_accounts "
+	            + "ON students.user_id = user_accounts.user_id "
+	            + "WHERE students.student_id = ?;";
+		
+		Object[] studentData = new Object[19];
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
@@ -188,13 +190,20 @@ public class RegistrarDatabaseConnection {
 				studentData[3] = resultSet.getString("birthdate");
 				studentData[4] = resultSet.getString("gender");
 				studentData[5] = resultSet.getString("phone_number");
-				studentData[6] = resultSet.getString("address");
+				//studentData[6];
 				studentData[7] = resultSet.getString("email");
 				studentData[8] = resultSet.getString("user_id");
 				studentData[9] = resultSet.getString("user_name");
 				studentData[10] = resultSet.getString("password");
 				studentData[11] = resultSet.getString("first_name");
 				studentData[12] = resultSet.getString("middle_name");
+				
+				studentData[13] = resultSet.getString("suffix");
+	            studentData[14] = resultSet.getString("house_number");
+	            studentData[15] = resultSet.getString("street");
+	            studentData[16] = resultSet.getString("barangay");
+	            studentData[17] = resultSet.getString("municipality");
+	            studentData[18] = resultSet.getString("province");
 			}
 		}
 		catch (SQLException e) {
@@ -368,37 +377,46 @@ public class RegistrarDatabaseConnection {
 		
 	}
 	
-	public void updateStudentInfo(String firstName, String middleName, String lastName, 
-			String lrn, String birthdate, String gender, String phoneNumber, String address, String email, 
-			String username, String password, int studentID) {
-		String query = "UPDATE students, user_accounts SET "
-				+ "students.first_name = ?, students.middle_name = ?, "
-				+ "students.last_name =?, students.LRN =?, students.birthdate = ?, "
-				+ "students.gender = ?, students.phone_number = ?, "
-				+ "students.address = ?, user_accounts.email = ?, "
-				+ "user_accounts.user_name = ?, user_accounts.password = ? "
-				+ "WHERE students.student_id = ? AND students.user_id = user_accounts.user_id;";
-		
-		try {
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setString(1, firstName);
-			statement.setString(2, middleName);
-			statement.setString(3, lastName);
-			statement.setString(4, lrn);
-			statement.setString(5, birthdate);
-			statement.setString(6, gender);
-			statement.setString(7, phoneNumber);
-			statement.setString(8, address);
-			statement.setString(9, email);
-			statement.setString(10, username);
-			statement.setString(11, password);
-			statement.setInt(12, studentID);
-			
-			int resultSet = statement.executeUpdate();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+	public void updateStudentInfo(String firstName, String middleName, String lastName, String suffix,
+	        String lrn, String birthdate, String gender, String phoneNumber, 
+	        String houseNumber, String street, String barangay, String municipality, String province,
+	        String email, String username, String password, int studentID) {
+	    
+	    String query = "UPDATE students, user_accounts SET "
+	            + "students.first_name = ?, students.middle_name = ?, "
+	            + "students.last_name = ?, students.suffix = ?, students.LRN = ?, students.birthdate = ?, "
+	            + "students.gender = ?, students.phone_number = ?, "
+	            + "students.house_number = ?, students.street = ?, students.barangay = ?, "
+	            + "students.municipality = ?, students.province = ?, "
+	            + "user_accounts.email = ?, "
+	            + "user_accounts.user_name = ?, user_accounts.password = ? "
+	            + "WHERE students.student_id = ? AND students.user_id = user_accounts.user_id;";
+
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, firstName);
+	        statement.setString(2, middleName);
+	        statement.setString(3, lastName);
+	        statement.setString(4, suffix);
+	        statement.setString(5, lrn);
+	        statement.setString(6, birthdate);
+	        statement.setString(7, gender);
+	        statement.setString(8, phoneNumber);
+	        statement.setString(9, houseNumber);
+	        statement.setString(10, street);
+	        statement.setString(11, barangay);
+	        statement.setString(12, municipality);
+	        statement.setString(13, province);
+	        statement.setString(14, email);
+	        statement.setString(15, username);
+	        statement.setString(16, password);
+	        statement.setInt(17, studentID);
+
+	        int resultSet = statement.executeUpdate();
+	    }
+	    catch(SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public void updateEnrollmentStatus(String status, int enrollmentID) {

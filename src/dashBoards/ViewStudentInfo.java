@@ -50,7 +50,7 @@ public class ViewStudentInfo implements ActionListener{
 		String birthdateData = String.valueOf(data[3]);
 		String genderData = String.valueOf(data[4]);
 		String phoneNumberData = String.valueOf(data[5]);
-		String addressData = String.valueOf(data[6]);
+//		String addressData = String.valueOf(data[6]);
 		String emailData = String.valueOf(data[7]);
 		String userIdData = String.valueOf(data[8]);
 		String firstNameData = String.valueOf(data[11]);
@@ -60,13 +60,27 @@ public class ViewStudentInfo implements ActionListener{
 		String strandName = String.valueOf(classRoomData[1]);
 		String teacherName = String.valueOf(classRoomData[2]);
 		
+		String suffix = String.valueOf(data[13]);
+		String houseNumber = String.valueOf(data[14]);
+		String street = String.valueOf(data[15]);
+		String barangay = String.valueOf(data[16]);
+		String municipality = String.valueOf(data[17]);
+		String province = String.valueOf(data[18]);
+		
+		if(suffix.equals("null")) {
+		    suffix = "";
+		}
+		else {
+		    suffix = ", " + suffix;
+		}
+		
 		Image iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
 		frame = new JFrame("Information");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
-		frame.setBounds(100, 100, 384, 477);
+		frame.setBounds(100, 100, 500, 477);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
@@ -95,7 +109,7 @@ public class ViewStudentInfo implements ActionListener{
 		studentID.setBounds(10, 28, 340, 14);
 		panel.add(studentID);
 		
-		JLabel fullName = new JLabel("Full Name: " + lastNameData + ", " + firstNameData + " " + middleNameData);
+		JLabel fullName = new JLabel("Full Name: " + lastNameData + ", " + firstNameData + " " + middleNameData + suffix);
 		fullName.setBounds(10, 44, 340, 14);
 		panel.add(fullName);
 		
@@ -115,8 +129,9 @@ public class ViewStudentInfo implements ActionListener{
 		phoneNumber.setBounds(10, 109, 340, 14);
 		panel.add(phoneNumber);
 		
-		JLabel address = new JLabel("Address: " + addressData);
-		address.setBounds(10, 125, 340, 14);
+		JLabel address = new JLabel("Address: " + houseNumber + " " + street + " st.,"
+				+ " BRGY." + barangay + ", "+ municipality + ", "+ province);
+		address.setBounds(10, 125, 450, 14);
 		panel.add(address);
 		
 		JLabel emailAddress = new JLabel("Email: " + emailData);
@@ -270,7 +285,7 @@ public class ViewStudentInfo implements ActionListener{
 		exitButton = new JButton("EXIT");
 		exitButton.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		exitButton.setFocusable(false);
-		exitButton.setBounds(286, 366, 64, 23);
+		exitButton.setBounds(400, 366, 64, 23);
 		exitButton.addActionListener(this);
 		panel.add(exitButton);
 		

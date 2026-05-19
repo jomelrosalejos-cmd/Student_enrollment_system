@@ -28,17 +28,32 @@ public class EditStudentInfo implements ActionListener{
 	private JTextField firstNameTextField;
 	private JTextField middleNameTextField;
 	private JTextField lastNameTextField;
+	
+	private JLabel suffixLabel;
+	private JTextField suffix;
+	
 	private JTextField lrnTextField;
 	private JTextField birthdateTextfield;
 	private JComboBox comboBox;
 	private JTextField phoneNumberTextfield;
-	private JTextField addressTextfield;
 	private JTextField emailTextfield;
 	private JTextField usernameTextfield;
 	private JComboBox enrollmentComboBox;
 	
-	int studentID;
-	int enrollmentID;
+	private JTextField houseNumber;
+	private JTextField street;
+	private JTextField barangay;
+	private JTextField municipality;
+	private JTextField province;
+	
+	private JLabel houseNumberLabel;
+	private JLabel streetLabel;
+	private JLabel barangayLabel;
+	private JLabel municipalityLabel;
+	private JLabel provinceLabel;
+	
+	private int studentID;
+	private int enrollmentID;
 	
 	JButton saveButton;
 	
@@ -59,12 +74,19 @@ public class EditStudentInfo implements ActionListener{
 		String birthdateData = String.valueOf(data[3]);
 		String genderData = String.valueOf(data[4]);
 		String phoneNumberData = String.valueOf(data[5]);
-		String addressData = String.valueOf(data[6]);
+		//String addressData = String.valueOf(data[6]);
 		String emailData = String.valueOf(data[7]);
 		String accountUsername = String.valueOf(data[9]);
 		String accountPassword = String.valueOf(data[10]);;
 		String firstNameData = String.valueOf(data[11]);
 		String middleNameData = String.valueOf(data[12]);
+		
+		String strsuffix = String.valueOf(data[13]);
+		String strhouseNumber = String.valueOf(data[14]);
+		String strstreet = String.valueOf(data[15]);
+		String strbarangay = String.valueOf(data[16]);
+		String strmunicipality = String.valueOf(data[17]);
+		String strprovince = String.valueOf(data[18]);
 		
 		
 		Image iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
@@ -73,7 +95,7 @@ public class EditStudentInfo implements ActionListener{
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setLayout(new BorderLayout(0, 0));
 		frame.setIconImage(iconImage);
-		frame.setBounds(100, 100, 384, 441);
+		frame.setBounds(100, 100, 500, 441);
 		frame.setLocationRelativeTo(null);
 		frame.setResizable(false);
 		
@@ -119,37 +141,31 @@ public class EditStudentInfo implements ActionListener{
 		panel.add(phoneNumber);
 		
 		JLabel address = new JLabel("Address: ");
-		address.setBounds(10, 214, 72, 14);
+		address.setBounds(10, 224, 72, 14);
 		panel.add(address);
 		
 		JLabel emailAddress = new JLabel("Email: ");
-		emailAddress.setBounds(10, 242, 72, 14);
+		emailAddress.setBounds(10, 253, 72, 14);
 		panel.add(emailAddress);
 		
 		JLabel username = new JLabel("Username: ");
-		username.setBounds(10, 269, 79, 14);
+		username.setBounds(10, 280, 79, 14);
 		panel.add(username);
 		
 		JLabel password = new JLabel("Password: ");
-		password.setBounds(10, 296, 72, 14);
+		password.setBounds(10, 307, 72, 14);
 		panel.add(password);
 		
 		saveButton = new JButton("SAVE");
 		saveButton.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		saveButton.addActionListener(this);
 		saveButton.setFocusable(false);
-		saveButton.setBounds(270, 330, 64, 23);
+		saveButton.setBounds(400, 330, 64, 23);
 		panel.add(saveButton);
-		
-		passwordTextfield = new JTextField();
-		passwordTextfield.setBounds(92, 292, 242, 20);
-		passwordTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		passwordTextfield.setText(accountPassword);
-		panel.add(passwordTextfield);
 		
 		firstNameTextField = new JTextField();
 		firstNameTextField.setColumns(10);
-		firstNameTextField.setBounds(92, 13, 242, 20);
+		firstNameTextField.setBounds(92, 13, 270, 20);
 		firstNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		firstNameTextField.setText(firstNameData);
 		panel.add(firstNameTextField);
@@ -158,26 +174,36 @@ public class EditStudentInfo implements ActionListener{
 		middleNameTextField.setText(middleNameData);
 		middleNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		middleNameTextField.setColumns(10);
-		middleNameTextField.setBounds(92, 40, 242, 20);
+		middleNameTextField.setBounds(92, 40, 270, 20);
 		panel.add(middleNameTextField);
 		
 		lastNameTextField = new JTextField();
 		lastNameTextField.setText(lastNameData);
 		lastNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lastNameTextField.setColumns(10);
-		lastNameTextField.setBounds(92, 68, 242, 20);
+		lastNameTextField.setBounds(92, 68, 147, 20);
 		panel.add(lastNameTextField);
+		
+		suffixLabel = new JLabel("Suffix:");
+		suffixLabel.setBounds(255, 72, 44, 14);
+		panel.add(suffixLabel);
+		
+		suffix = new JTextField();
+		suffix.setText(strsuffix);
+		suffix.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		suffix.setBounds(303, 68, 59, 20);
+		panel.add(suffix);
 		
 		lrnTextField = new JTextField();
 		lrnTextField.setColumns(10);
-		lrnTextField.setBounds(92, 97, 242, 20);
+		lrnTextField.setBounds(92, 97, 270, 20);
 		lrnTextField.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		lrnTextField.setText(lrnData);
 		panel.add(lrnTextField);
 		
 		birthdateTextfield = new JTextField();
 		birthdateTextfield.setColumns(10);
-		birthdateTextfield.setBounds(92, 126, 242, 20);
+		birthdateTextfield.setBounds(92, 126, 270, 20);
 		birthdateTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		birthdateTextfield.setText(birthdateData);
 		panel.add(birthdateTextfield);
@@ -191,31 +217,90 @@ public class EditStudentInfo implements ActionListener{
 		
 		phoneNumberTextfield = new JTextField();
 		phoneNumberTextfield.setColumns(10);
-		phoneNumberTextfield.setBounds(112, 182, 222, 20);
+		phoneNumberTextfield.setBounds(112, 182, 250, 20);
 		phoneNumberTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		phoneNumberTextfield.setText(phoneNumberData);
 		panel.add(phoneNumberTextfield);
 		
-		addressTextfield = new JTextField();
-		addressTextfield.setColumns(10);
-		addressTextfield.setBounds(92, 210, 242, 20);
-		addressTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		addressTextfield.setText(addressData);
-		panel.add(addressTextfield);
+		houseNumber = new JTextField();
+		houseNumber.setColumns(10);
+		houseNumber.setBounds(92, 220, 43, 20);
+		houseNumber.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		houseNumber.setText(strhouseNumber);
+		panel.add(houseNumber);
+		
+		street = new JTextField();
+		street.setText(strstreet);
+		street.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		street.setColumns(10);
+		street.setBounds(145, 220, 64, 20);
+		panel.add(street);
+		
+		barangay = new JTextField();
+		barangay.setText(strbarangay);
+		barangay.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		barangay.setColumns(10);
+		barangay.setBounds(221, 221, 64, 20);
+		panel.add(barangay);
+		
+		municipality = new JTextField();
+		municipality.setText(strmunicipality);
+		municipality.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		municipality.setColumns(10);
+		municipality.setBounds(295, 221, 75, 20);
+		panel.add(municipality);
+		
+		province = new JTextField();
+		province.setText(strprovince);
+		province.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		province.setColumns(10);
+		province.setBounds(380, 221, 72, 20);
+		panel.add(province);
+		
+		houseNumberLabel = new JLabel("House no.");
+		houseNumberLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		houseNumberLabel.setBounds(92, 207, 61, 14);
+		panel.add(houseNumberLabel);
+		
+		streetLabel = new JLabel("Street");
+		streetLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		streetLabel.setBounds(156, 207, 53, 14);
+		panel.add(streetLabel);
+		
+		barangayLabel = new JLabel("Barangay");
+		barangayLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		barangayLabel.setBounds(221, 207, 64, 14);
+		panel.add(barangayLabel);
+		
+		municipalityLabel = new JLabel("City/Municipality");
+		municipalityLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		municipalityLabel.setBounds(295, 207, 90, 14);
+		panel.add(municipalityLabel);
+		
+		provinceLabel = new JLabel("Province");
+		provinceLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		provinceLabel.setBounds(390, 207, 64, 14);
+		panel.add(provinceLabel);
 		
 		emailTextfield = new JTextField();
 		emailTextfield.setColumns(10);
-		emailTextfield.setBounds(92, 238, 242, 20);
+		emailTextfield.setBounds(92, 249, 270, 20);
 		emailTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		emailTextfield.setText(emailData);
 		panel.add(emailTextfield);
 		
 		usernameTextfield = new JTextField();
 		usernameTextfield.setColumns(10);
-		usernameTextfield.setBounds(92, 265, 242, 20);
+		usernameTextfield.setBounds(92, 276, 270, 20);
 		usernameTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		usernameTextfield.setText(accountUsername);
 		panel.add(usernameTextfield);
+		
+		passwordTextfield = new JTextField();
+		passwordTextfield.setBounds(92, 303, 270, 20);
+		passwordTextfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		passwordTextfield.setText(accountPassword);
+		panel.add(passwordTextfield);
 		
 		JLabel middleName = new JLabel("Middle Name: ");
 		middleName.setBounds(9, 44, 86, 14);
@@ -226,7 +311,7 @@ public class EditStudentInfo implements ActionListener{
 		panel.add(lastName);
 		
 		JLabel lblStatus = new JLabel("Status: ");
-		lblStatus.setBounds(10, 323, 72, 14);
+		lblStatus.setBounds(10, 334, 72, 14);
 		panel.add(lblStatus);
 		
 		
@@ -234,7 +319,7 @@ public class EditStudentInfo implements ActionListener{
 		enrollmentComboBox = new JComboBox(enrollmentStatus);
 		enrollmentComboBox.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		enrollmentComboBox.setSelectedItem(database.getEnrollmentStatus(database.getEnrollmentID(studentID)));
-		enrollmentComboBox.setBounds(92, 319, 101, 20);
+		enrollmentComboBox.setBounds(92, 330, 101, 20);
 		panel.add(enrollmentComboBox);
 		
 		frame.setVisible(true);
@@ -255,8 +340,20 @@ public class EditStudentInfo implements ActionListener{
 			String password = passwordTextfield.getText().trim();
 			String email = emailTextfield.getText().trim();
 			String lrn = lrnTextField.getText().trim();
-			String address = addressTextfield.getText().trim();
+			//String address = addressTextfield.getText().trim()
+
 			String status = (String) enrollmentComboBox.getSelectedItem();
+			String houseNumber = this.houseNumber.getText().toUpperCase().trim();
+			String street = this.street.getText().toUpperCase().trim();
+			String barangay = this.barangay.getText().toUpperCase().trim();
+			String municipality = this.municipality.getText().toUpperCase().trim();
+			String province = this.province.getText().toUpperCase().trim();
+			
+			String suffix = this.suffix.getText().toUpperCase().trim();
+			
+			if(suffix.equals("NULL")) {
+			    suffix = null;
+			}
 			
 			if (lastName.length() > 50) {
 		        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.");
@@ -297,8 +394,8 @@ public class EditStudentInfo implements ActionListener{
 				int response = JOptionPane.showConfirmDialog(frame, "Save changes?", "Confirm", JOptionPane.YES_NO_OPTION);
 					
 				if(response == JOptionPane.YES_OPTION) {
-				    database.updateStudentInfo(firstName, middleName, lastName,
-				            lrn, String.valueOf(birthdate), gender, phoneNumber, address, email,
+				    database.updateStudentInfo(firstName, middleName, lastName, suffix, 
+				            lrn, String.valueOf(birthdate), gender, phoneNumber, houseNumber, street, barangay, municipality, province, email,
 				            username, password, studentID);
 
 				    if(status.equals("ENROLLED")) {

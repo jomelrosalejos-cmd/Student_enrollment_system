@@ -68,35 +68,44 @@ public class DatabaseConnection {
 	}
 	
 	//Insert
-	public void insertInformation(int strandID, String LRN, String lastName, String firstName, 
-			String middleName, LocalDate birthdate, String gender, String address, String phoneNumber) {
-		String query = "INSERT INTO students "
-				+ "(user_id, strand_id, LRN, last_name, first_name, middle_name, birthdate, gender, address, phone_number) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		
-		try {
-			PreparedStatement statement = connection.prepareStatement(query);
-			statement.setInt(1, getUserID());
-			statement.setInt(2, strandID);
-			statement.setString(3, LRN);
-			statement.setString(4, lastName);
-			statement.setString(5, firstName);
-			statement.setString(6, middleName);
-			statement.setObject(7, birthdate);
-			statement.setString(8, gender);
-			statement.setString(9, address);
-			statement.setString(10, phoneNumber);
-			
-			int rowsInserted = statement.executeUpdate();
-			if (rowsInserted > 0) {
-			    System.out.println("Insert successful!");
-			} else {
-			    System.out.println("Insert failed — 0 rows affected.");
-			}			
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void insertInformation(int strandID, String LRN, String lastName, String firstName,
+	        String middleName, String suffix, LocalDate birthdate, String gender,
+	        String houseNumber, String street, String barangay,
+	        String municipality, String province, String phoneNumber) {
+
+	    String query = "INSERT INTO students "
+	            + "(user_id, strand_id, LRN, last_name, first_name, middle_name, suffix, birthdate, gender, "
+	            + "house_number, street, barangay, municipality, province, phone_number) "
+	            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, getUserID());
+	        statement.setInt(2, strandID);
+	        statement.setString(3, LRN);
+	        statement.setString(4, lastName);
+	        statement.setString(5, firstName);
+	        statement.setString(6, middleName);
+	        statement.setString(7, suffix);
+	        statement.setObject(8, birthdate);
+	        statement.setString(9, gender);
+	        statement.setString(10, houseNumber);
+	        statement.setString(11, street);
+	        statement.setString(12, barangay);
+	        statement.setString(13, municipality);
+	        statement.setString(14, province);
+	        statement.setString(15, phoneNumber);
+
+	        int rowsInserted = statement.executeUpdate();
+	        if (rowsInserted > 0) {
+	            System.out.println("Insert successful!");
+	        } else {
+	            System.out.println("Insert failed — 0 rows affected.");
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public void insertEnrollment() {

@@ -38,57 +38,62 @@ public class EnrollmentForm implements ActionListener{
 	JFrame frame;
 	
 	//Student Information
-	JTextField lastname;
-	JTextField firstName;
-	JTextField middleName;
-	JTextField phoneNumber;
-	JComboBox comboBox;
-	JTextField address;
-	JTextField birthdate;
-	JTextField LRN;
-	JComboBox comboBox_1;
+	private JTextField lastName;
+	private JTextField suffix;
+	private JTextField firstName;
+	private JTextField middleName;
+	private JTextField phoneNumber;
+	private JComboBox comboBox;
+	private JTextField houseNumber;
+	private JTextField street;
+	private JTextField barangay;
+	private JTextField municipality;
+	private JTextField province;
+	private JTextField birthdate;
+	private JTextField LRN;
+	private JComboBox comboBox_1;
 	
-	JLabel form137Label;
+	private JLabel form137Label;
 	
 	//buttons
-	JButton form137;
-	JButton birthCertButton;
-	JButton IDpicButton;
-	JButton goodMoralButton;
+	private JButton form137;
+	private JButton birthCertButton;
+	private JButton IDpicButton;
+	private JButton goodMoralButton;
 	
 	//form137 docs
-	File form137File;
-	String form137fileSource;
-	Path form137source;
-	Path form137destination;
+	private File form137File;
+	private String form137fileSource;
+	private Path form137source;
+	private Path form137destination;
 	
 	//birth certificate docs
-	File birthCertFile;
-	String birthCertfileSource;
-	Path birthCertsource;
-	Path birthCertdestination;
+	private File birthCertFile;
+	private String birthCertfileSource;
+	private Path birthCertsource;
+	private Path birthCertdestination;
 	
 	//Good moral docs
-	File goodMoralFile;
-	String goodMoralfileSource;
-	Path goodMoralsource;
-	Path goodMoraldestination;
+	private File goodMoralFile;
+	private String goodMoralfileSource;
+	private Path goodMoralsource;
+	private Path goodMoraldestination;
 	
 	//ID pic docs
-	File idPicFile;
-	String idPicfileSource;
-	Path idPicsource;
-	Path idPicdestination;
+	private File idPicFile;
+	private String idPicfileSource;
+	private Path idPicsource;
+	private Path idPicdestination;
 	
-	JLabel form137FileNameDisplay;
-	JLabel birthCertFileNameDisplay;
-	JLabel IDpicFileNameDisplay;
-	JLabel goodMoralFileNameDisplay;
+	private JLabel form137FileNameDisplay;
+	private JLabel birthCertFileNameDisplay;
+	private JLabel IDpicFileNameDisplay;
+	private JLabel goodMoralFileNameDisplay;
 	
-	JButton cancelButton;
-	JButton submitButton;
+	private JButton cancelButton;
+	private JButton submitButton;
 	
-	DatabaseConnection database;
+	private DatabaseConnection database;
 	
 	public EnrollmentForm(DatabaseConnection database) {
 		
@@ -159,16 +164,26 @@ public class EnrollmentForm implements ActionListener{
 		mainForm.add(linePanel);
 		
 		//Last Name
+		lastName = new JTextField();
+		lastName.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		lastName.setBounds(10, 61, 165, 30);
+		mainForm.add(lastName);
+		
 		JLabel lastNameLabel = new JLabel("Last Name");
 		lastNameLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		lastNameLabel.setBounds(10, 46, 90, 14);
 		mainForm.add(lastNameLabel);
 		
-		lastname = new JTextField();
-		lastname.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lastname.setBounds(10, 61, 222, 30);
-		mainForm.add(lastname);
-		lastname.setColumns(10);
+		suffix = new JTextField();
+		suffix.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		suffix.setColumns(10);
+		suffix.setBounds(183, 61, 61, 30);
+		mainForm.add(suffix);
+		
+		JLabel suffixLabel = new JLabel("Suffix");
+		suffixLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		suffixLabel.setBounds(183, 46, 61, 14);
+		mainForm.add(suffixLabel);
 		
 		//First Name
 		JLabel firstNameLabel = new JLabel("First Name");
@@ -216,15 +231,60 @@ public class EnrollmentForm implements ActionListener{
 		mainForm.add(genderLabel);
 		
 		//Address
-		JLabel addressLabel = new JLabel("Address (House No., Street, Barangay, City/Municipality, Province)");
-		addressLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		addressLabel.setBounds(281, 102, 321, 14);
-		mainForm.add(addressLabel);
-		address = new JTextField();
-		address.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		address.setColumns(10);
-		address.setBounds(281, 116, 321, 30);
-		mainForm.add(address);
+		houseNumber = new JTextField();
+		houseNumber.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		houseNumber.setColumns(10);
+		houseNumber.setBounds(270, 116, 61, 30);
+		mainForm.add(houseNumber);
+		
+		street = new JTextField();
+		street.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		street.setColumns(10);
+		street.setBounds(341, 116, 90, 30);
+		mainForm.add(street);
+		
+		barangay = new JTextField();
+		barangay.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		barangay.setColumns(10);
+		barangay.setBounds(441, 116, 90, 30);
+		mainForm.add(barangay);
+		
+		municipality = new JTextField();
+		municipality.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		municipality.setColumns(10);
+		municipality.setBounds(541, 116, 90, 30);
+		mainForm.add(municipality);
+		
+		province = new JTextField();
+		province.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		province.setColumns(10);
+		province.setBounds(642, 116, 90, 30);
+		mainForm.add(province);
+		
+		JLabel houseNumberLabel = new JLabel("House no.");
+		houseNumberLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		houseNumberLabel.setBounds(270, 102, 61, 14);
+		mainForm.add(houseNumberLabel);
+		
+		JLabel streetLabel = new JLabel("Street");
+		streetLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		streetLabel.setBounds(341, 102, 85, 14);
+		mainForm.add(streetLabel);
+		
+		JLabel barangayLabel = new JLabel("Barangay");
+		barangayLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		barangayLabel.setBounds(441, 102, 85, 14);
+		mainForm.add(barangayLabel);
+		
+		JLabel municipalityLabel = new JLabel("City/Municipality");
+		municipalityLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		municipalityLabel.setBounds(541, 102, 90, 14);
+		mainForm.add(municipalityLabel);
+		
+		JLabel provinceLabel = new JLabel("Province");
+		provinceLabel.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		provinceLabel.setBounds(642, 102, 85, 14);
+		mainForm.add(provinceLabel);
 		
 		//Birthdate
 		JLabel birthdateLabel = new JLabel("Birthdate (YYYY-MM-DD)");
@@ -523,12 +583,17 @@ public class EnrollmentForm implements ActionListener{
 		
 		LocalDate bDate = null;
 		
-		String lastName = lastname.getText().toUpperCase().trim();
+		String lastName = this.lastName.getText().toUpperCase().trim();
 		String firstname = firstName.getText().toUpperCase().trim();
 		String middlename = middleName.getText().toUpperCase().trim();
 		String phonenumber = phoneNumber.getText().trim();
 		String gender = (String) comboBox.getSelectedItem();
-		String adrs = address.getText().toUpperCase().trim();
+		String houseNumber = this.houseNumber.getText().toUpperCase().trim();
+		String street = this.street.getText().toUpperCase().trim();
+		String barangay = this.barangay.getText().toUpperCase().trim();
+		String municipality = this.municipality.getText().toUpperCase().trim();
+		String province = this.province.getText().toUpperCase().trim();
+		String suffix = this.suffix.getText().toUpperCase().trim();
 		String lrnNumber = LRN.getText().trim();
 		
 		String strands = (String) comboBox_1.getSelectedItem();
@@ -552,7 +617,8 @@ public class EnrollmentForm implements ActionListener{
 		
 		
 		
-		if(lastName.isBlank() || firstname.isBlank() || middlename.isBlank() || adrs.isBlank()) {
+		if(lastName.isBlank() || firstname.isBlank() || middlename.isBlank() || birthdate.getText().isBlank() || houseNumber.isBlank() ||
+			 street.isBlank() || barangay.isBlank() || municipality.isBlank() || province.isBlank()) {
 			JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
@@ -588,8 +654,11 @@ public class EnrollmentForm implements ActionListener{
 		}
 		
 		if(hasError == false) {
-			database.insertInformation(strandID, lrnNumber, lastName, firstname, 
-					middlename, bDate, gender, adrs, phonenumber);
+			database.insertInformation(
+					strandID, lrnNumber, lastName, firstname,
+			        middlename, suffix, bDate, gender,
+			        houseNumber, street, barangay,
+			        municipality, province, phonenumber);
 			
 			uploadForm137();
 			uploadBirthCert();
