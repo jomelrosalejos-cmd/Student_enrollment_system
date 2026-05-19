@@ -42,6 +42,7 @@ public class RegistrarDashboard implements ActionListener{
 	JButton filterPendingButton;
 	JButton filterEnrolledButton;
 	JButton filterRejectedButton;
+	JButton sendNotif;
 	
 	JButton searchStudentButton;
 	JButton moreInfo;
@@ -316,6 +317,12 @@ public class RegistrarDashboard implements ActionListener{
 		refreshButton.setBounds(517, 499, 89, 23);
 		contentPanel.add(refreshButton);
 		
+		sendNotif = new JButton("Send Notif");
+		sendNotif.addActionListener(this);
+		sendNotif.setFocusable(false);
+		sendNotif.setBounds(203, 499, 103, 23);
+		contentPanel.add(sendNotif);
+		
 		moreInfo = new JButton("More Info");
 		moreInfo.setFocusable(false);
 		moreInfo.addActionListener(this);
@@ -327,6 +334,10 @@ public class RegistrarDashboard implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == sendNotif) {
+			new SendMessage();
+		}
+		
 		if(e.getSource() == schoolYearChooser) {
 			String selectedYear = (String) schoolYearChooser.getSelectedItem();
 		    schoolYearTitleLabel.setText("School Year · " + selectedYear);

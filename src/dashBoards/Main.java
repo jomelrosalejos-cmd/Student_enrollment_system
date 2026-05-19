@@ -1,5 +1,9 @@
 package dashBoards;
 
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -10,12 +14,14 @@ public class Main {
 		//new StudentDashBoard();
 		//new TeacherDashboard();
 		//new PrincipalDashboard();
-		//new RegistrarDashboard();
+		new RegistrarDashboard();
 		//new SQLConnection();
 		//new ViewStudentInfo();
 		//new EditStudentInfo();
 		
-		new LoginStaffAccess();
+		//new LoginStaffAccess();
+		//new SendMessage();
+	    
 		
 		
 	}
