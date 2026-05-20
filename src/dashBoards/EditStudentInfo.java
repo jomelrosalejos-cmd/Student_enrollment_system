@@ -355,6 +355,19 @@ public class EditStudentInfo implements ActionListener{
 			    suffix = null;
 			}
 			
+			if(lastName.isBlank() || firstName.isBlank() || middleName.isBlank() || houseNumber.isBlank() ||
+					 street.isBlank() || barangay.isBlank() || municipality.isBlank() || province.isBlank()) {
+					JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+			
+			if(houseNumber.length() > 20 ||
+					   street.length() > 50 || barangay.length() > 50 ||
+					   municipality.length() > 50 || province.length() > 50) {
+						 JOptionPane.showMessageDialog(frame, "Address fields must not exceed 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+						 return;
+					}
+			
 			if (lastName.length() > 50) {
 		        JOptionPane.showMessageDialog(frame, "Last name is too long. Max 50 characters.");
 		        hasError = true;}

@@ -220,7 +220,7 @@ public class EnrollmentForm implements ActionListener{
 		mainForm.add(phoneNumber);
 		
 		//Gender
-		String[] Gender = {"Male", "Female"};
+		String[] Gender = {"MALE", "FEMALE"};
 		comboBox = new JComboBox(Gender);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		comboBox.setBounds(10, 116, 101, 30);
@@ -621,6 +621,13 @@ public class EnrollmentForm implements ActionListener{
 			 street.isBlank() || barangay.isBlank() || municipality.isBlank() || province.isBlank()) {
 			JOptionPane.showMessageDialog(frame, "Please fill in all required fields", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
+		}
+		
+		if(houseNumber.length() > 20 ||
+		   street.length() > 50 || barangay.length() > 50 ||
+		   municipality.length() > 50 || province.length() > 50) {
+			 JOptionPane.showMessageDialog(frame, "Address fields must not exceed 50 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+			 return;
 		}
 		
 		if (lastName.length() > 50) {
