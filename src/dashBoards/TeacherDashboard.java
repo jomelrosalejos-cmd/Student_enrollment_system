@@ -267,6 +267,7 @@ public class TeacherDashboard implements ActionListener{
 		mainPanel.add(refreshButton);
 		
 		searchButton = new JButton("Search");
+		searchButton.setFocusable(false);
 		searchButton.setBounds(209, 195, 89, 23);
 		searchButton.addActionListener(this);
 		mainPanel.add(searchButton);
@@ -296,7 +297,12 @@ public class TeacherDashboard implements ActionListener{
 				table.setModel(new DefaultTableModel(data, column));
 			}
 			catch(NumberFormatException n) {
-				System.out.println("INVALID STUDENT ID!");
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
+				
+				String value = searchBarForStudent.getText().toUpperCase().trim();
+				row = database.searchStudent(value, selectedYear);
+				data = row.toArray(new Object[0][]);
+				table.setModel(new DefaultTableModel(data, column));
 			}
 		}
 		

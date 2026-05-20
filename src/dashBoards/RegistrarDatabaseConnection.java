@@ -141,12 +141,42 @@ public class RegistrarDatabaseConnection {
 	
 	public ArrayList<Object[]> searchStudent(int student_id, String selectedYear) {
 		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, "
-		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id WHERE students.student_id = ? AND school_year = ?;";
+		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+		+ "WHERE students.student_id = ? AND school_year = ?;";
 		ArrayList<Object[]> List = new ArrayList<>();
 		
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			statement.setInt(1, student_id);
+			statement.setString(2, selectedYear);
+			ResultSet resultSet = statement.executeQuery();
+
+			if(resultSet.next()) {
+			    Object[] row = {
+			        resultSet.getInt("student_id"),
+			        resultSet.getString("last_name") + ", " + resultSet.getString("first_name"),
+			        resultSet.getString("LRN"),
+			        resultSet.getString("gender"),
+			        getStrand(resultSet.getInt("strand_id")),
+			        resultSet.getString("status")
+			    };
+			    List.add(row);
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return List;
+	}
+	public ArrayList<Object[]> searchStudent(String studentName, String selectedYear) {
+		String query = "SELECT students.student_id, last_name, first_name, LRN, gender, "
+		+ "strand_id, status FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+		+ "WHERE students.last_name = ? AND school_year = ?;";
+		ArrayList<Object[]> List = new ArrayList<>();
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, studentName);
 			statement.setString(2, selectedYear);
 			ResultSet resultSet = statement.executeQuery();
 

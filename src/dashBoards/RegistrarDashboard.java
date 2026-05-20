@@ -60,6 +60,7 @@ public class RegistrarDashboard implements ActionListener{
 	JButton refreshButton;
 	
 	JComboBox schoolYearChooser;
+	JButton generateReportButton;
 	
 	ArrayList<Object[]> row;
 	Object[][] data;
@@ -329,11 +330,22 @@ public class RegistrarDashboard implements ActionListener{
 		moreInfo.setBounds(22, 499, 89, 23);
 		contentPanel.add(moreInfo);
 		
+		generateReportButton = new JButton("Generate Report");
+		generateReportButton.setFocusable(false);
+		generateReportButton.setBounds(469, 161, 137, 23);
+		generateReportButton.addActionListener(this);
+		contentPanel.add(generateReportButton);
+		
 		frame.setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		if(e.getSource() == generateReportButton) {
+			String selectedYear = (String) schoolYearChooser.getSelectedItem();
+			new GenerateReport().generate(selectedYear);
+		}
+		
 		if(e.getSource() == sendNotif) {
 			try {
 				int value = Integer.parseInt(studentSearchField.getText().trim());
@@ -366,7 +378,13 @@ public class RegistrarDashboard implements ActionListener{
 				setTableColumnSize();
 			}
 			catch(NumberFormatException n) {
-				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
+				String selectedYear = (String) schoolYearChooser.getSelectedItem();
+				
+				String value = studentSearchField.getText().toUpperCase().trim();
+				row = database.searchStudent(value, selectedYear);
+				data = row.toArray(new Object[0][]);
+				studentTable.setModel(new DefaultTableModel(data, column));
+				setTableColumnSize();
 			}
 		}
 		if(e.getSource() == moreInfo) {

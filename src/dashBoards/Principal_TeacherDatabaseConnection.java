@@ -271,6 +271,49 @@ public class Principal_TeacherDatabaseConnection {
 	    return List;
 	}
 	
+	public ArrayList<Object[]> searchStudent(String studentName, String selectedYear) {
+	    String query = "SELECT students.student_id, last_name, first_name, middle_name, LRN, birthdate, gender, "
+	            + "phone_number, house_number, street, barangay, municipality, province, email "
+	            + "FROM students INNER JOIN enrollments ON students.student_id = enrollments.student_id "
+	            + "INNER JOIN user_accounts ON students.user_id = user_accounts.user_id "
+	            + "WHERE students.last_name = ? AND school_year = ? AND section_id = ?;";
+	    ArrayList<Object[]> List = new ArrayList<>();
+
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, studentName);
+	        statement.setString(2, selectedYear);
+	        statement.setInt(3, getSectionIDByTeacher());
+	        ResultSet resultSet = statement.executeQuery();
+
+	        if(resultSet.next()) {
+	            String address = resultSet.getString("house_number") + " "
+	                    + resultSet.getString("street") + " st., BRGY."
+	                    + resultSet.getString("barangay") + ", "
+	                    + resultSet.getString("municipality") + ", "
+	                    + resultSet.getString("province");
+
+	            Object[] row = {
+	                resultSet.getInt("student_id"),
+	                resultSet.getString("last_name") + ", " +
+	                resultSet.getString("first_name") + " " +
+	                resultSet.getString("middle_name"),
+	                resultSet.getString("LRN"),
+	                resultSet.getString("birthdate"),
+	                resultSet.getString("gender"),
+	                resultSet.getString("phone_number"),
+	                resultSet.getString("email"),
+	                address
+	            };
+	            List.add(row);
+	        }
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return List;
+	}
+	
 	public ArrayList<Object[]> getSectionsPerStrand(String schoolYear) {
 	    ArrayList<Object[]> list = new ArrayList<>();
 	    String query = "SELECT strands.strand_name, sections.section_name, " +
