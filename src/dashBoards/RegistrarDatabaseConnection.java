@@ -567,4 +567,28 @@ public class RegistrarDatabaseConnection {
 	    return status;
 	}
 	
+	public void insertNotification(int studentId, int notificationId) {
+	    String query = "UPDATE student_notifications SET notification_id = ? "
+	    		+ "WHERE student_id = ?";
+	    try {
+	        PreparedStatement stmt = connection.prepareStatement(query);
+	        stmt.setInt(1, notificationId);
+	        stmt.setInt(2, studentId);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void unassignSection(int enrollmentID) {
+	    String query = "UPDATE enrollments SET section_id = NULL WHERE enrollment_id = ?;";
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, enrollmentID);
+	        statement.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 }

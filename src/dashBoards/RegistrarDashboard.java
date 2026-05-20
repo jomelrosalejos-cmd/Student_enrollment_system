@@ -335,7 +335,14 @@ public class RegistrarDashboard implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == sendNotif) {
-			new SendMessage();
+			try {
+				int value = Integer.parseInt(studentSearchField.getText().trim());
+				new SendMessage(database, value);
+			}
+			catch(NumberFormatException n) {
+				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
+			}
+			
 		}
 		
 		if(e.getSource() == schoolYearChooser) {
@@ -359,7 +366,7 @@ public class RegistrarDashboard implements ActionListener{
 				setTableColumnSize();
 			}
 			catch(NumberFormatException n) {
-				System.out.println("INVALID STUDENT ID!");
+				JOptionPane.showMessageDialog(frame, "INVALID STUDENT ID!");
 			}
 		}
 		if(e.getSource() == moreInfo) {

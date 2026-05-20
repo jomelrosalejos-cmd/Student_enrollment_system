@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
@@ -394,8 +395,84 @@ public class StudentDashBoard implements ActionListener {
 		JLabel step5 = new JLabel("Enrolled");
 		step5.setBounds(548, 129, 70, 14);
 		mainPanel.add(step5);
-			
+		
+		
 		frame.setVisible(true);
+		
+		switch(database.getNotifications(database.getStudentID())) {
+		case 1 : 
+			String message1 = "Dear Student,\n"
+					+ "\n"
+					+ "Your Form 137 is not clearly readable. Kindly submit a clear hard copy to the\n"
+					+ "Registrar’s Office at your earliest convenience.\n"
+					+ "\n"
+					+ "Thank you.\n";
+
+			int result1 = JOptionPane.showConfirmDialog(frame, message1, "Message", JOptionPane.OK_CANCEL_OPTION);
+		break;
+		case 2: 
+			String message2 = "Dear Student,\n"
+					+ "\r\n"
+					+ "Your Certificate of Good Moral Character is not clearly readable. Kindly submit a clear\n"
+					+ "hard copy to the Registrar’s Office at your earliest convenience.\n"
+					+ "\n"
+					+ "Thank you.\n";
+
+			int result2 = JOptionPane.showConfirmDialog(frame, message2, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		case 3: 
+			String message3 = "Dear Student,\n"
+					+ "\n"
+					+ "Your Birth Certificate is not clearly readable. Kindly submit a clear hard copy to the\n"
+					+ "Registrar’s Office at your earliest convenience.\n"
+					+ "\n"
+					+ "Thank you.\n";
+
+			int result3 = JOptionPane.showConfirmDialog(frame, message3, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		case 4: 
+			String message4 = "Dear Student,\n"
+					+ "\n"
+					+ "Your 2x2 ID Picture is not clearly clear or suitable for processing. Kindly submit a\n"
+					+ "clear hard copy to the Registrar’s Office at your earliest convenience.\n"
+					+ "\n"
+					+ "Thank you.\n";
+
+			int result4 = JOptionPane.showConfirmDialog(frame, message4, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		case 5: 
+			String message5 = "Dear Student,\n"
+				 	   + "\n"
+				 	   + "We would like to inform you that there is an issue with your personal information on\n"
+				 	   + "record. Kindly proceed to the Registrar’s Office for verification and further assistance.\n"
+				 	   + "\n"
+				 	   + "Thank you.\n";
+
+		int result5 = JOptionPane.showConfirmDialog(frame, message5, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		case 6: 
+			String message6 = "Dear Student,\n"
+			           + "\n"
+			           + "We are pleased to inform you that your enrollment has been successfully processed.\n"
+			           + "Kindly submit hard copies of all required documents to the Registrar’s Office for\n"
+			           + "verification and completion of your enrollment requirements.\n"
+			           + "\n"
+			           + "Thank you.\n";
+
+		int result6 = JOptionPane.showConfirmDialog(frame, message6, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		case 7: 
+			String message7 = "Dear Student,\n"
+			           + "\n"
+			           + "Your enrollment application is currently under review by the Registrar’s Office.\n"
+			           + "Please wait for further updates regarding the status of your enrollment."
+			           + "\n\n"
+			           + "Thank you for your patience and understanding.\n";
+
+		int result7 = JOptionPane.showConfirmDialog(frame, message7, "Message", JOptionPane.OK_CANCEL_OPTION);
+			break;
+		}
+		
 	}
 
 	@Override

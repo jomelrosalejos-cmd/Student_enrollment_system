@@ -670,6 +670,8 @@ public class EnrollmentForm implements ActionListener{
 			database.insertDocument("ID Picture",idPicdestination);
 			database.insertDocument("Good Moral",goodMoraldestination);
 			
+			database.insertNotification(7, database.getStudentID());
+			
 			new StudentDashBoard(database);
 			frame.dispose();
 			

@@ -404,4 +404,40 @@ public class DatabaseConnection {
 				return false;
 	}
 	
+	public void insertNotification(int studentId, int notificationId) {
+	    String query = "INSERT INTO student_notifications (student_id, notification_id) VALUES (?, ?)";
+	    try {
+	        PreparedStatement stmt = connection.prepareStatement(query);
+	        stmt.setInt(1, studentId);
+	        stmt.setInt(2, notificationId);
+	        stmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public int getNotifications(int studentID) {
+	    String query = "SELECT notification_id FROM student_notifications " +
+	                   "WHERE student_id = ? ;";
+	    
+	    int notification = 7;
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, studentID);
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        if(resultSet.next()) {
+	        	notification = resultSet.getInt("notification_id");
+	        }
+	        
+	    }
+	    catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return notification;
+	    
+	}
+	
 }

@@ -402,6 +402,7 @@ public class EditStudentInfo implements ActionListener{
 				        database.approveAndAssignSection(enrollmentID, studentID);
 				    } else {
 				        database.updateEnrollmentStatus(status, database.getEnrollmentID(studentID));
+				        database.unassignSection(enrollmentID);
 				    }
 
 				    JOptionPane.showMessageDialog(frame, "Changes have been saved");

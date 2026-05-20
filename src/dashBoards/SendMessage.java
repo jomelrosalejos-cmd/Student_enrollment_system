@@ -30,8 +30,13 @@ public class SendMessage implements ActionListener{
 	private JButton successButton;
 	private JButton customizeMessageButton;
 	private JButton closeButton;
+	private RegistrarDatabaseConnection database;
+	private int studentID;
 	
-	public SendMessage() {
+	public SendMessage(RegistrarDatabaseConnection database, int studentID) {
+		this.database = database;
+		this.studentID = studentID;
+		
 		iconImage = new ImageIcon(getClass().getResource("/images/yobhel_logo.jpg")).getImage();
 		
 		frame = new JFrame("Send Notification");
@@ -164,68 +169,58 @@ public class SendMessage implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == form137Button) {
-			String message = "Dear Student,\n"
-					+ "\n"
-					+ "Your Form 137 is not clearly readable. Kindly submit a clear hard copy to the\n"
-					+ "Registrar’s Office at your earliest convenience.\n"
-					+ "\n"
-					+ "Thank you.\n"
-					+ "";
-
-			int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: INVALID FORM-137?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 1);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == goodMoralButton) {
-			String message = "Dear Student,\n"
-					+ "\r\n"
-					+ "Your Certificate of Good Moral Character is not clearly readable. Kindly submit a clear\n"
-					+ "hard copy to the Registrar’s Office at your earliest convenience.\n"
-					+ "\n"
-					+ "Thank you.\n";
-
-			int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: INVALID GOOD MORAL?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 2);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == birthCertificateButton) {
-			String message = "Dear Student,\n"
-					+ "\n"
-					+ "Your Birth Certificate is not clearly readable. Kindly submit a clear hard copy to the\n"
-					+ "Registrar’s Office at your earliest convenience.\n"
-					+ "\n"
-					+ "Thank you.\n";
-
-			int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: INVALID BIRTH CERTIFICATE?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 3);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == id2x2Pic) {
-			String message = "Dear Student,\n"
-					+ "\n"
-					+ "Your 2x2 ID Picture is not clearly clear or suitable for processing. Kindly submit a\n"
-					+ "clear hard copy to the Registrar’s Office at your earliest convenience.\n"
-					+ "\n"
-					+ "Thank you.\n"
-					+ "";
-
-			int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: INVALID 2x2 ID Picture?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 4);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == infoProblem) {
-			String message = "Dear Student,\n"
-					 	   + "\n"
-					 	   + "We would like to inform you that there is an issue with your personal information on\n"
-					 	   + "record. Kindly proceed to the Registrar’s Office for verification and further assistance.\n"
-					 	   + "\n"
-					 	   + "Thank you.";
-
-			int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: INFORMATION PROBLEM?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 5);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == successButton) {
-			
-			String message = "Dear Student,\n"
-				           + "\n"
-				           + "We are pleased to inform you that your enrollment has been successfully processed.\n"
-				           + "Kindly submit hard copies of all required documents to the Registrar’s Office for\n"
-				           + "verification and completion of your enrollment requirements.\n"
-				           + "\n"
-				           + "Thank you.";
-
-	        int result = JOptionPane.showConfirmDialog(frame, message, "Message", JOptionPane.OK_CANCEL_OPTION);
+		    int confirm = JOptionPane.showConfirmDialog(frame, 
+		        "Send notification: ENROLLMENT SUCCESS?", 
+		        "Confirm", JOptionPane.YES_NO_OPTION);
+		    if(confirm == JOptionPane.YES_OPTION) {
+		        database.insertNotification(studentID, 6);
+		        JOptionPane.showMessageDialog(frame, "Notification sent!");
+		    }
 		}
 		if(e.getSource() == closeButton) {
 			frame.dispose();
